@@ -1,7 +1,7 @@
 <?php
-namespace Volante\SkyBukkit\RelayServer\Src\FlightStatus\Network;
+namespace Volante\SkyBukkit\RelayServer\Src\Network;
 
-use React\Socket\ConnectionInterface;
+use Ratchet\ConnectionInterface;
 use Volante\SkyBukkit\RelayServer\Src\Subscription\Topic;
 
 
@@ -22,12 +22,19 @@ class Client
     private $subscriptions = [];
 
     /**
+     * @var string
+     */
+    private $role;
+
+    /**
      * Client constructor.
      * @param ConnectionInterface $connection
+     * @param string $role
      */
-    public function __construct(ConnectionInterface $connection)
+    public function __construct(ConnectionInterface $connection, string $role)
     {
         $this->connection = $connection;
+        $this->role = $role;
     }
 
     /**
@@ -44,5 +51,13 @@ class Client
     public function getSubscriptions(): array
     {
         return $this->subscriptions;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRole(): string
+    {
+        return $this->role;
     }
 }

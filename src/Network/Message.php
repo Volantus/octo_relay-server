@@ -3,72 +3,29 @@ namespace Volante\SkyBukkit\RelayServer\Src\Network;
 
 /**
  * Class Message
- * @package Volante\SkyBukkit\Monitor\Src\FlightStatus\Network
+ * @package Volante\SkyBukkit\RelayServer\Src\FlightStatus\Network
  */
-class Message implements \JsonSerializable
+abstract class Message
 {
     /**
-     * @var string
+     * @var Client
      */
-    private $type;
-
-    /**
-     * @var string
-     */
-    private $title;
-
-    /**
-     * @var array
-     */
-    private $data;
+    private $sender;
 
     /**
      * Message constructor.
-     * @param string $type
-     * @param string $title
-     * @param array $data
+     * @param Client $sender
      */
-    public function __construct(string $type, string $title, array $data)
+    public function __construct(Client $sender)
     {
-        $this->type = $type;
-        $this->title = $title;
-        $this->data = $data;
+        $this->sender = $sender;
     }
 
     /**
-     * @return string
+     * @return Client
      */
-    public function getType(): string
+    public function getSender(): Client
     {
-        return $this->type;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTitle(): string
-    {
-        return $this->title;
-    }
-
-    /**
-     * @return array
-     */
-    public function getData(): array
-    {
-        return $this->data;
-    }
-
-
-    /**
-     * @inheritdoc
-     */
-    function jsonSerialize()
-    {
-        return [
-            'type'  => $this->type,
-            'title' => $this->title,
-            'data'  => $this->data
-        ];
+        return $this->sender;
     }
 }

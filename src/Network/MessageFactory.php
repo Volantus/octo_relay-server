@@ -11,18 +11,18 @@ use Assert\Assertion;
 class MessageFactory
 {
     /**
+     * @param Client $sender
      * @param string $json
-     *
-     * @return Message
+     * @return RawMessage
      */
-    public function create(string $json) : Message
+    public function create(Client $sender, string $json) : RawMessage
     {
         $json = json_decode($json, true);
 
         Assertion::isArray($json, 'Invalid message format: invalid json format');
         $this->validate($json);
 
-        return new Message($json['type'], $json['title'], $json['data']);
+        return new RawMessage($sender, $json['type'], $json['title'], $json['data']);
     }
 
     /**

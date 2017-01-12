@@ -1,7 +1,9 @@
 <?php
 namespace Volante\SkyBukkit\RleayServer\Tests\Message;
 
-use Volante\SkyBukkit\RelayServer\Src\Network\Message;
+use Volante\SkyBukkit\RelayServer\Src\Network\Client;
+use Volante\SkyBukkit\RelayServer\Src\Network\RawMessage;
+use Volante\SkyBukkit\RelayServer\Tests\General\DummyConnection;
 
 /**
  * Class MessageTest
@@ -9,6 +11,16 @@ use Volante\SkyBukkit\RelayServer\Src\Network\Message;
  */
 class MessageTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var Client
+     */
+    private $dummyClient;
+
+    protected function setUp()
+    {
+        $this->dummyClient = new Client(new DummyConnection(), 99);
+    }
+
     public function test_jsonSerialize()
     {
         $expected = [
@@ -20,7 +32,7 @@ class MessageTest extends \PHPUnit_Framework_TestCase
             ]
         ];
 
-        $message = new Message($expected['type'], $expected['title'], $expected['data']);
+        $message = new RawMessage($this->dummyClient, $expected['type'], $expected['title'], $expected['data']);
         self::assertEquals($expected, $message->jsonSerialize());
     }
 }
