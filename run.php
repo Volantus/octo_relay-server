@@ -2,7 +2,7 @@
 use Ratchet\Http\HttpServer;
 use Ratchet\Server\IoServer;
 use Ratchet\WebSocket\WsServer;
-use Volante\SkyBukkit\Monitor\App\OperatorServer;
+use Volante\SkyBukkit\RelayServer\Src\OperatorServer;
 
 require __DIR__.'/vendor/autoload.php';
 
