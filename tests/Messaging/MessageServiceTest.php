@@ -1,9 +1,9 @@
 <?php
-namespace Volante\SkyBukkit\RleayServer\Tests;
+namespace Volante\SkyBukkit\RleayServer\Tests\Messaging;
 
-use Volante\SkyBukkit\RelayServer\Src\MessageService;
+use Volante\SkyBukkit\RelayServer\Src\Messaging\MessageService;
 use Volante\SkyBukkit\RelayServer\Src\Network\Client;
-use Volante\SkyBukkit\RelayServer\Src\Network\Message;
+use Volante\SkyBukkit\RelayServer\Src\Messaging\Message;
 use Volante\SkyBukkit\RelayServer\Src\Network\RawMessage;
 use Volante\SkyBukkit\RelayServer\Src\Network\RawMessageFactory;
 use Volante\SkyBukkit\RelayServer\Src\Role\IntroductionMessage;

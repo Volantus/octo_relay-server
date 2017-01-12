@@ -1,7 +1,7 @@
 <?php
 namespace Volante\SkyBukkit\RelayServer\Src\Role;
 
-use Volante\SkyBukkit\RelayServer\Src\Network\Message;
+use Volante\SkyBukkit\RelayServer\Src\Messaging\Message;
 use Volante\SkyBukkit\RelayServer\Src\Network\Client;
 
 /**

@@ -1,5 +1,5 @@
 <?php
-namespace Volante\SkyBukkit\RelayServer\Src;
+namespace Volante\SkyBukkit\RelayServer\Src\Messaging;
 
 use Ratchet\ConnectionInterface;
 use Volante\SkyBukkit\RelayServer\Src\Network\Client;

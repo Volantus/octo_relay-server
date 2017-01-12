@@ -1,9 +1,9 @@
 <?php
-namespace Volante\SkyBukkit\RleayServer\Tests;
+namespace Volante\SkyBukkit\RleayServer\Tests\Messaging;
 
 use Ratchet\ConnectionInterface;
-use Volante\SkyBukkit\RelayServer\Src\MessageRelayService;
-use Volante\SkyBukkit\RelayServer\Src\MessageService;
+use Volante\SkyBukkit\RelayServer\Src\Messaging\MessageRelayService;
+use Volante\SkyBukkit\RelayServer\Src\Messaging\MessageService;
 use Volante\SkyBukkit\RelayServer\Src\Network\Client;
 use Volante\SkyBukkit\RelayServer\Src\Network\ClientFactory;
 use Volante\SkyBukkit\RelayServer\Src\Role\ClientRole;

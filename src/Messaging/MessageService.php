@@ -1,8 +1,7 @@
 <?php
-namespace Volante\SkyBukkit\RelayServer\Src;
+namespace Volante\SkyBukkit\RelayServer\Src\Messaging;
 
 use Volante\SkyBukkit\RelayServer\Src\Network\Client;
-use Volante\SkyBukkit\RelayServer\Src\Network\Message;
 use Volante\SkyBukkit\RelayServer\Src\Network\RawMessageFactory;
 use Volante\SkyBukkit\RelayServer\Src\Role\IntroductionMessage;
 use Volante\SkyBukkit\RelayServer\Src\Role\IntroductionMessageFactory;

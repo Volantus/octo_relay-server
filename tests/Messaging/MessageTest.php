@@ -1,5 +1,5 @@
 <?php
-namespace Volante\SkyBukkit\RleayServer\Tests\Message;
+namespace Volante\SkyBukkit\RleayServer\Tests\Messaging;
 
 use Volante\SkyBukkit\RelayServer\Src\Network\Client;
 use Volante\SkyBukkit\RelayServer\Src\Network\RawMessage;
