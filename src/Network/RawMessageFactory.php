@@ -8,7 +8,7 @@ use Assert\Assertion;
  *
  * @package Volante\SkyBukkit\Monitor\Src\FlightStatus\Network
  */
-class MessageFactory
+class RawMessageFactory
 {
     /**
      * @param Client $sender

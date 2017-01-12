@@ -3,7 +3,7 @@ namespace Volante\SkyBukkit\RleayServer\Tests\Message;
 
 use Volante\SkyBukkit\RelayServer\Src\Network\Client;
 use Volante\SkyBukkit\RelayServer\Src\Network\RawMessage;
-use Volante\SkyBukkit\RelayServer\Src\Network\MessageFactory;
+use Volante\SkyBukkit\RelayServer\Src\Network\RawMessageFactory;
 use Volante\SkyBukkit\RelayServer\Tests\General\DummyConnection;
 
 /**
@@ -14,7 +14,7 @@ use Volante\SkyBukkit\RelayServer\Tests\General\DummyConnection;
 class MessageFactoryTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var MessageFactory
+     * @var RawMessageFactory
      */
     private $factory;
 
@@ -25,7 +25,7 @@ class MessageFactoryTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->factory = new MessageFactory();
+        $this->factory = new RawMessageFactory();
         $this->sender = new Client(new DummyConnection(), 99);
     }
 
