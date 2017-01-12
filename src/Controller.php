@@ -8,7 +8,7 @@ use Ratchet\MessageComponentInterface;
  * Class OperatorServer
  * @package Volante\SkyBukkit\Monitor\App
  */
-class OperatorServer implements MessageComponentInterface
+class Controller implements MessageComponentInterface
 {
     /**
      * @var \SplObjectStorage

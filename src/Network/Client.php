@@ -22,16 +22,16 @@ class Client
     private $subscriptions = [];
 
     /**
-     * @var string
+     * @var int
      */
     private $role;
 
     /**
      * Client constructor.
      * @param ConnectionInterface $connection
-     * @param string $role
+     * @param int $role
      */
-    public function __construct(ConnectionInterface $connection, string $role)
+    public function __construct(ConnectionInterface $connection, int $role)
     {
         $this->connection = $connection;
         $this->role = $role;
@@ -54,9 +54,17 @@ class Client
     }
 
     /**
-     * @return string
+     * @param int $role
      */
-    public function getRole(): string
+    public function setRole(int $role)
+    {
+        $this->role = $role;
+    }
+
+    /**
+     * @return int
+     */
+    public function getRole(): int
     {
         return $this->role;
     }
