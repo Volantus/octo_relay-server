@@ -1,24 +1,19 @@
 <?php
 namespace Volante\SkyBukkit\RleayServer\Tests\Role;
 
-use Volante\SkyBukkit\RelayServer\Src\Network\Client;
+use Volante\SkyBukkit\RelayServer\Src\Messaging\Message;
 use Volante\SkyBukkit\RelayServer\Src\Network\RawMessage;
 use Volante\SkyBukkit\RelayServer\Src\Role\ClientRole;
 use Volante\SkyBukkit\RelayServer\Src\Role\IntroductionMessage;
 use Volante\SkyBukkit\RelayServer\Src\Role\IntroductionMessageFactory;
-use Volante\SkyBukkit\RelayServer\Tests\General\DummyConnection;
+use Volante\SkyBukkit\RelayServer\Tests\General\MessageFactoryTestCase;
 
 /**
  * Class IntroductionMessageFactoryTest
  * @package Volante\SkyBukkit\RleayServer\Tests\Role
  */
-class IntroductionMessageFactoryTest extends \PHPUnit_Framework_TestCase
+class IntroductionMessageFactoryTest extends MessageFactoryTestCase
 {
-    /**
-     * @var Client
-     */
-    private $client;
-
     /**
      * @var IntroductionMessageFactory
      */
@@ -26,28 +21,18 @@ class IntroductionMessageFactoryTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
+        parent::setUp();
         $this->factory = new IntroductionMessageFactory();
-        $this->client = new Client(new DummyConnection(), -1);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Invalid introduction message: role key is missing
-     */
     public function test_create_roleKeyMissing()
     {
-        $rawMessage = $this->getRawMessage([]);
-        $this->factory->create($rawMessage);
+        $this->validateMissingKey('role');
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Invalid introduction message: role is not numeric
-     */
     public function test_create_roleNotNumeric()
     {
-        $rawMessage = $this->getRawMessage(['role' => 'abc']);
-        $this->factory->create($rawMessage);
+        $this->validateNotNumeric('role');
     }
 
     /**
@@ -71,11 +56,27 @@ class IntroductionMessageFactoryTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param array $data
-     * @return RawMessage
+     * @return string
      */
-    protected function getRawMessage(array $data) : RawMessage
+    protected function getMessageType(): string
     {
-        return new RawMessage($this->client, IntroductionMessage::TYPE, 'Dummy Introduction message', $data);
+        return IntroductionMessage::TYPE;
+    }
+
+    /**
+     * @param RawMessage $rawMessage
+     * @return mixed
+     */
+    protected function callFactory(RawMessage $rawMessage) : Message
+    {
+        return $this->factory->create($rawMessage);
+    }
+
+    /**
+     * @return array
+     */
+    protected function getCorrectMessageData(): array
+    {
+       return ['role' => ClientRole::OPERATOR];
     }
 }
