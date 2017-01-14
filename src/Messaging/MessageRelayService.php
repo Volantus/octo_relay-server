@@ -53,7 +53,20 @@ class MessageRelayService
      */
     public function newClient(ConnectionInterface $connection)
     {
-        $this->clients[] = $this->clientFactory->get($connection);
+        $this->sandbox(function () use ($connection) {
+            $this->clients[] = $this->clientFactory->get($connection);
+        });
+    }
+
+    /**
+     * @param ConnectionInterface $connection
+     */
+    public function removeClient(ConnectionInterface $connection)
+    {
+        $this->sandbox(function () use ($connection) {
+            $client = $this->findClient($connection);
+            $this->disconnectClient($client);
+        });
     }
 
     /**
@@ -62,7 +75,7 @@ class MessageRelayService
      */
     public function newMessage(ConnectionInterface $connection, string $message)
     {
-        try {
+        $this->sandbox(function () use ($connection, $message) {
             $client = $this->findClient($connection);
             $message = $this->messageService->handle($client, $message);
 
@@ -76,7 +89,19 @@ class MessageRelayService
                     $this->handleIntroductionMessage($message);
                     break;
             }
+        });
+    }
+
+    /**
+     * @param callable $function
+     */
+    protected function sandbox(callable $function)
+    {
+        try {
+            call_user_func($function);
         } catch (\Exception $e) {
+            $this->output->writeln('<error>[MessageRelayService] ' . $e->getMessage() . '</error>');
+        } catch (\TypeError $e) {
             $this->output->writeln('<error>[MessageRelayService] ' . $e->getMessage() . '</error>');
         }
     }

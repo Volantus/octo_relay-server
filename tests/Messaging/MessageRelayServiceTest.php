@@ -1,7 +1,6 @@
 <?php
 namespace Volante\SkyBukkit\RleayServer\Tests\Messaging;
 
-use Ratchet\ConnectionInterface;
 use Symfony\Component\Console\Tests\Fixtures\DummyOutput;
 use Volante\SkyBukkit\RelayServer\Src\Authentication\AuthenticationMessage;
 use Volante\SkyBukkit\RelayServer\Src\Messaging\MessageRelayService;
@@ -60,6 +59,18 @@ class MessageRelayServiceTest extends \PHPUnit_Framework_TestCase
             ->willReturn(new Client(1, $this->connection, -1));
 
         $this->relayService->newClient($this->connection);
+    }
+
+    public function test_removeClient_disconnected()
+    {
+        $this->clientFactory->expects(self::once())
+            ->method('get')->with($this->connection)
+            ->willReturn(new Client(1, $this->connection, -1));
+
+        $this->relayService->newClient($this->connection);
+        $this->relayService->removeClient($this->connection);
+
+        self::assertTrue($this->connection->isConnectionClosed());
     }
 
     public function test_newMessage_clientNotConnected()
