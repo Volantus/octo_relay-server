@@ -18,7 +18,7 @@ class MessageTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->dummyClient = new Client(new DummyConnection(), 99);
+        $this->dummyClient = new Client(1, new DummyConnection(), 99);
     }
 
     public function test_jsonSerialize()

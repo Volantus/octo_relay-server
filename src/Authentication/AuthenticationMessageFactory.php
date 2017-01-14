@@ -13,7 +13,7 @@ class AuthenticationMessageFactory extends MessageFactory
     /**
      * @var string
      */
-    protected $label = AuthenticationMessage::LABEL;
+    protected $label = AuthenticationMessage::TYPE;
 
     /**
      * @param RawMessage $rawMessage

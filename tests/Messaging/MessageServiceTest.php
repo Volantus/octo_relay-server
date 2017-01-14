@@ -1,6 +1,8 @@
 <?php
 namespace Volante\SkyBukkit\RleayServer\Tests\Messaging;
 
+use Volante\SkyBukkit\RelayServer\Src\Authentication\AuthenticationMessage;
+use Volante\SkyBukkit\RelayServer\Src\Authentication\AuthenticationMessageFactory;
 use Volante\SkyBukkit\RelayServer\Src\Messaging\MessageService;
 use Volante\SkyBukkit\RelayServer\Src\Network\Client;
 use Volante\SkyBukkit\RelayServer\Src\Messaging\Message;
@@ -32,17 +34,23 @@ class MessageServiceTest extends \PHPUnit_Framework_TestCase
     private $introductionMessageFactory;
 
     /**
+     * @var AuthenticationMessageFactory|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private $authenticationMessageFactory;
+
+    /**
      * @var Client
      */
     private $sender;
 
     protected function setUp()
     {
-        $this->sender = new Client(new DummyConnection(), -1);
+        $this->sender = new Client(1, new DummyConnection(), -1);
         $this->rawMessageFactory = $this->getMockBuilder(RawMessageFactory::class)->disableOriginalConstructor()->getMock();
         $this->introductionMessageFactory = $this->getMockBuilder(IntroductionMessageFactory::class)->disableOriginalConstructor()->getMock();
+        $this->authenticationMessageFactory = $this->getMockBuilder(AuthenticationMessageFactory::class)->disableOriginalConstructor()->getMock();
 
-        $this->service = new MessageService($this->rawMessageFactory, $this->introductionMessageFactory);
+        $this->service = new MessageService($this->rawMessageFactory, $this->introductionMessageFactory, $this->authenticationMessageFactory);
     }
 
     public function test_handle_rawMessageServiceCalled()
@@ -83,7 +91,24 @@ class MessageServiceTest extends \PHPUnit_Framework_TestCase
 
         $result = $this->service->handle($this->sender, 'correct');
 
-        self::assertInstanceOf(Message::class, $result);
+        self::assertInstanceOf(IntroductionMessage::class, $result);
+        self::assertSame($expected, $result);
+    }
+
+    public function test_handle_authenticationMessageHandledCorrectly()
+    {
+        $rawMessage = new RawMessage($this->sender, AuthenticationMessage::TYPE, 'test', []);
+        $expected = new AuthenticationMessage($this->sender, 'correctToken');
+
+        $this->rawMessageFactory->expects(self::once())
+            ->method('create')
+            ->with($this->sender, 'correct')
+            ->willReturn($rawMessage);
+        $this->authenticationMessageFactory->expects(self::once())->method('create')->willReturn($expected);
+
+        $result = $this->service->handle($this->sender, 'correct');
+
+        self::assertInstanceOf(AuthenticationMessage::class, $result);
         self::assertSame($expected, $result);
     }
 }

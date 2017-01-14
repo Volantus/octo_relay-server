@@ -10,11 +10,17 @@ use Ratchet\ConnectionInterface;
 class ClientFactory
 {
     /**
+     * @var int
+     */
+    private $currentId = 0;
+
+    /**
      * @param ConnectionInterface $connection
      * @return Client
      */
     public function get(ConnectionInterface $connection)
     {
-        return new Client($connection, -1);
+        $this->currentId++;
+        return new Client($this->currentId, $connection, -1);
     }
 }

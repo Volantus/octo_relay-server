@@ -19,4 +19,7 @@
             <directory suffix=".php">app/</directory>
         </whitelist>
     </filter>
+    <php>
+        <env name="AUTH_TOKEN" value="correctToken"/>
+    </php>
 </phpunit>

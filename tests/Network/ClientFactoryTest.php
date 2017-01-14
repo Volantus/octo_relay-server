@@ -43,4 +43,24 @@ class ClientFactoryTest extends \PHPUnit_Framework_TestCase
 
         self::assertEmpty($client->getSubscriptions());
     }
+
+    public function test_get_notAuthenticated()
+    {
+        $connection = new DummyConnection();
+        $client = $this->factory->get($connection);
+
+        self::assertFalse($client->isAuthenticated());
+    }
+
+    public function test_get_idIncremented()
+    {
+        $connection = new DummyConnection();
+        $client1 = $this->factory->get($connection);
+        $client2 = $this->factory->get($connection);
+        $client3 = $this->factory->get($connection);
+
+        self::assertEquals(1, $client1->getId());
+        self::assertEquals(2, $client2->getId());
+        self::assertEquals(3, $client3->getId());
+    }
 }

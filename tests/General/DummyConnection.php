@@ -10,6 +10,11 @@ use Ratchet\ConnectionInterface;
 class DummyConnection implements ConnectionInterface
 {
     /**
+     * @var bool
+     */
+    private $connectionClosed = false;
+
+    /**
      * @inheritdoc
      */
     function send($data)
@@ -21,5 +26,14 @@ class DummyConnection implements ConnectionInterface
      */
     function close()
     {
+        $this->connectionClosed = true;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isConnectionClosed(): bool
+    {
+        return $this->connectionClosed;
     }
 }

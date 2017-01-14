@@ -26,7 +26,7 @@ class MessageFactoryTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->factory = new RawMessageFactory();
-        $this->sender = new Client(new DummyConnection(), 99);
+        $this->sender = new Client(1, new DummyConnection(), 99);
     }
 
     /**

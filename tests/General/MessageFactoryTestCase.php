@@ -18,7 +18,7 @@ abstract class MessageFactoryTestCase extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-       $this->client = new Client(new DummyConnection(), -1);
+       $this->client = new Client(1, new DummyConnection(), -1);
     }
 
     /**

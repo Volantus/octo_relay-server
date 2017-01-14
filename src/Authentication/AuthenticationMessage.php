@@ -12,7 +12,7 @@ use Volante\SkyBukkit\RelayServer\Src\Network\Client;
  */
 class AuthenticationMessage extends Message
 {
-    const LABEL = 'authentication';
+    const TYPE = 'authentication';
 
     /**
      * @var string

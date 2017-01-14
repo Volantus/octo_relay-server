@@ -47,7 +47,7 @@ class AuthenticationMessageFactoryTest extends MessageFactoryTestCase
      */
     protected function getMessageType(): string
     {
-        return AuthenticationMessage::LABEL;
+        return AuthenticationMessage::TYPE;
     }
 
     /**

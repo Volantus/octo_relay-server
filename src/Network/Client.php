@@ -12,9 +12,19 @@ use Volante\SkyBukkit\RelayServer\Src\Subscription\Topic;
 class Client
 {
     /**
+     * @var int
+     */
+    private $id;
+
+    /**
      * @var ConnectionInterface
      */
     private $connection;
+
+    /**
+     * @var bool
+     */
+    private $authenticated = false;
 
     /**
      * @var Topic[]
@@ -28,13 +38,15 @@ class Client
 
     /**
      * Client constructor.
+     * @param int $id
      * @param ConnectionInterface $connection
      * @param int $role
      */
-    public function __construct(ConnectionInterface $connection, int $role)
+    public function __construct(int $id, ConnectionInterface $connection, int $role)
     {
         $this->connection = $connection;
         $this->role = $role;
+        $this->id = $id;
     }
 
     /**
@@ -67,5 +79,26 @@ class Client
     public function getRole(): int
     {
         return $this->role;
+    }
+
+    public function setAuthenticated()
+    {
+        $this->authenticated = true;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAuthenticated(): bool
+    {
+        return $this->authenticated;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->id;
     }
 }
