@@ -53,7 +53,8 @@ class MessageRelayService
     public function newClient(ConnectionInterface $connection)
     {
         $this->sandbox(function () use ($connection) {
-            $this->clients[] = $this->clientFactory->get($connection);
+            $this->clients[] = $client = $this->clientFactory->get($connection);
+            $this->writeInfoLine('MessageRelayService', 'New client ' . $client->getId() . ' connected!');
         });
     }
 
