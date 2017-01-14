@@ -5,7 +5,7 @@ namespace Volante\SkyBukkit\RelayServer\Src\Network;
  * Class Message
  * @package Volante\SkyBukkit\Monitor\Src\FlightStatus\Network
  */
-class RawMessage extends \Volante\SkyBukkit\Common\Src\Network\RawMessage
+class RawMessage extends \Volante\SkyBukkit\Common\Src\General\Network\RawMessage
 {
     /**
      * @var Client

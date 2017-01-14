@@ -6,7 +6,7 @@ namespace Volante\SkyBukkit\RelayServer\Src\Network;
  *
  * @package Volante\SkyBukkit\Monitor\Src\FlightStatus\Network
  */
-class RawMessageFactory extends \Volante\SkyBukkit\Common\Src\Network\RawMessageFactory
+class RawMessageFactory extends \Volante\SkyBukkit\Common\Src\General\Network\RawMessageFactory
 {
     /**
      * @param Client $sender

@@ -3,8 +3,8 @@ namespace Volante\SkyBukkit\RelayServer\Src\Messaging;
 
 use Ratchet\ConnectionInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Volante\SkyBukkit\Common\Src\CLI\OutputOperations;
-use Volante\SkyBukkit\Common\Src\Role\ClientRole;
+use Volante\SkyBukkit\Common\Src\General\CLI\OutputOperations;
+use Volante\SkyBukkit\Common\Src\General\Role\ClientRole;
 use Volante\SkyBukkit\RelayServer\Src\Authentication\AuthenticationMessage;
 use Volante\SkyBukkit\RelayServer\Src\Authentication\UnauthorizedException;
 use Volante\SkyBukkit\RelayServer\Src\Network\Client;
