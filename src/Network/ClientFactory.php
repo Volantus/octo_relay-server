@@ -7,20 +7,14 @@ use Ratchet\ConnectionInterface;
  * Class ClientFactory
  * @package Volante\SkyBukkit\RelayServer\Src\Network
  */
-class ClientFactory
+class ClientFactory extends \Volante\SkyBukkit\Common\Src\Server\Network\ClientFactory
 {
-    /**
-     * @var int
-     */
-    private $currentId = 0;
-
     /**
      * @param ConnectionInterface $connection
      * @return Client
      */
     public function get(ConnectionInterface $connection)
     {
-        $this->currentId++;
-        return new Client($this->currentId, $connection, -1);
+        return new Client($this->getNextId(), $connection, -1);
     }
 }
