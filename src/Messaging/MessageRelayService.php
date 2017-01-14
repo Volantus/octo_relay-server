@@ -5,8 +5,10 @@ use Ratchet\ConnectionInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Volante\SkyBukkit\RelayServer\Src\Authentication\AuthenticationMessage;
 use Volante\SkyBukkit\RelayServer\Src\Authentication\UnauthorizedException;
+use Volante\SkyBukkit\RelayServer\Src\CLI\OutputOperations;
 use Volante\SkyBukkit\RelayServer\Src\Network\Client;
 use Volante\SkyBukkit\RelayServer\Src\Network\ClientFactory;
+use Volante\SkyBukkit\RelayServer\Src\Role\ClientRole;
 use Volante\SkyBukkit\RelayServer\Src\Role\IntroductionMessage;
 
 /**
@@ -15,10 +17,7 @@ use Volante\SkyBukkit\RelayServer\Src\Role\IntroductionMessage;
  */
 class MessageRelayService
 {
-    /**
-     * @var OutputInterface
-     */
-    private $output;
+    use OutputOperations;
 
     /**
      * @var MessageService
@@ -100,9 +99,9 @@ class MessageRelayService
         try {
             call_user_func($function);
         } catch (\Exception $e) {
-            $this->output->writeln('<error>[MessageRelayService] ' . $e->getMessage() . '</error>');
+            $this->writeErrorLine('MessageRelayService', $e->getMessage());
         } catch (\TypeError $e) {
-            $this->output->writeln('<error>[MessageRelayService] ' . $e->getMessage() . '</error>');
+            $this->writeErrorLine('MessageRelayService', $e->getMessage());
         }
     }
 
@@ -113,6 +112,7 @@ class MessageRelayService
     {
         if ($message->getToken() === getenv('AUTH_TOKEN')) {
             $message->getSender()->setAuthenticated();
+            $this->writeInfoLine('MessageRelayService', 'Client ' . $message->getSender()->getId() . ' authenticated successfully.');
         } else {
             $this->disconnectClient($message->getSender());
             throw new UnauthorizedException('Client ' . $message->getSender()->getId() . ' tried to authenticate with wrong token!');
@@ -126,6 +126,7 @@ class MessageRelayService
     {
         $this->authenticate($message->getSender());
         $message->getSender()->setRole($message->getRole());
+        $this->writeInfoLine('MessageRelayService', 'Client ' . $message->getSender()->getId() . ' introduced as ' . ClientRole::getTitle($message->getRole()) . '.');
     }
 
     /**

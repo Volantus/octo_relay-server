@@ -75,8 +75,11 @@ class MessageRelayServiceTest extends \PHPUnit_Framework_TestCase
 
     public function test_newMessage_clientNotConnected()
     {
+        $outputLog = null;
         $this->dummyOutput->expects(self::once())
-            ->method('writeLn')->with('<error>[MessageRelayService] No connected client found!</error>');
+            ->method('writeLn')->willReturnCallback(function ($messages, $options = 0) use ($outputLog) {
+                self::assertStringEndsWith('[<fg=cyan;options=bold>MessageRelayService</>] <error>No connected client found!</error>', $messages);
+            });
 
         $this->relayService->newMessage($this->connection, '123');
     }
