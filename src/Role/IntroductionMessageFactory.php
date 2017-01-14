@@ -2,6 +2,7 @@
 namespace Volante\SkyBukkit\RelayServer\Src\Role;
 
 use Assert\Assertion;
+use Volante\SkyBukkit\Common\Src\Role\ClientRole;
 use Volante\SkyBukkit\RelayServer\Src\Messaging\MessageFactory;
 use Volante\SkyBukkit\RelayServer\Src\Network\RawMessage;
 

@@ -7,7 +7,7 @@ use Volante\SkyBukkit\RelayServer\Src\Messaging\MessageRelayService;
 use Volante\SkyBukkit\RelayServer\Src\Messaging\MessageService;
 use Volante\SkyBukkit\RelayServer\Src\Network\Client;
 use Volante\SkyBukkit\RelayServer\Src\Network\ClientFactory;
-use Volante\SkyBukkit\RelayServer\Src\Role\ClientRole;
+use Volante\SkyBukkit\Common\Src\Role\ClientRole;
 use Volante\SkyBukkit\RelayServer\Src\Role\IntroductionMessage;
 use Volante\SkyBukkit\RelayServer\Tests\General\DummyConnection;
 

@@ -3,7 +3,7 @@ namespace Volante\SkyBukkit\RleayServer\Tests\Role;
 
 use Volante\SkyBukkit\RelayServer\Src\Messaging\Message;
 use Volante\SkyBukkit\RelayServer\Src\Network\RawMessage;
-use Volante\SkyBukkit\RelayServer\Src\Role\ClientRole;
+use Volante\SkyBukkit\Common\Src\Role\ClientRole;
 use Volante\SkyBukkit\RelayServer\Src\Role\IntroductionMessage;
 use Volante\SkyBukkit\RelayServer\Src\Role\IntroductionMessageFactory;
 use Volante\SkyBukkit\RelayServer\Tests\General\MessageFactoryTestCase;
