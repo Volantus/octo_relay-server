@@ -1,10 +1,13 @@
 <?php
-use Ratchet\Http\HttpServer;
-use Ratchet\Server\IoServer;
-use Ratchet\WebSocket\WsServer;
-use Volante\SkyBukkit\RelayServer\Src\Controller;
+use Dotenv\Dotenv;
+use Symfony\Component\Console\Application;
+use Volante\SkyBukkit\RelayServer\Src\CLI\ServerCommand;
 
 require __DIR__.'/vendor/autoload.php';
 
-$server = IoServer::factory(new HttpServer(new WsServer(new Controller())), 8080);
-$server->run();
+$dotEnv = new Dotenv(__DIR__);
+$dotEnv->load();
+
+$application = new Application();
+$application->add(new ServerCommand());
+$application->run();
