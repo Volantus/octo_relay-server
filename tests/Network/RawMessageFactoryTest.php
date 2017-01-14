@@ -11,7 +11,7 @@ use Volante\SkyBukkit\RelayServer\Tests\General\DummyConnection;
  *
  * @package Volante\SkyBukkit\Monitor\Tests\Message
  */
-class MessageFactoryTest extends \PHPUnit_Framework_TestCase
+class RawMessageFactoryTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var RawMessageFactory
