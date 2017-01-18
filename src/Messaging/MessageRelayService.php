@@ -12,6 +12,12 @@ use Volante\SkyBukkit\RelayServer\Src\Network\ClientFactory;
  */
 class MessageRelayService extends MessageServerService
 {
+    /**
+     * MessageRelayService constructor.
+     * @param OutputInterface $output
+     * @param MessageService|null $messageService
+     * @param ClientFactory|null $clientFactory
+     */
     public function __construct(OutputInterface $output, MessageService $messageService = null, ClientFactory $clientFactory = null)
     {
         parent::__construct($output, $messageService, $clientFactory ?: new ClientFactory());
