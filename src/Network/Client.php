@@ -1,7 +1,7 @@
 <?php
 namespace Volante\SkyBukkit\RelayServer\Src\Network;
 
-use Volante\SkyBukkit\RelayServer\Src\Subscription\Topic;
+use Volante\SkyBukkit\RelayServer\Src\Subscription\TopicStatus;
 
 /**
  * Class Connection
@@ -10,12 +10,12 @@ use Volante\SkyBukkit\RelayServer\Src\Subscription\Topic;
 class Client extends \Volante\SkyBukkit\Common\Src\Server\Network\Client
 {
     /**
-     * @var Topic[]
+     * @var TopicStatus[]
      */
     private $subscriptions = [];
 
     /**
-     * @return Topic[]
+     * @return TopicStatus[]
      */
     public function getSubscriptions(): array
     {

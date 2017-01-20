@@ -5,7 +5,7 @@ namespace Volante\SkyBukkit\RelayServer\Src\Subscription;
  * Class Subscription
  * @package Volante\SkyBukkit\Monitor\Src\Subscription
  */
-class Topic
+class TopicStatus
 {
     /**
      * @var string
@@ -15,7 +15,7 @@ class Topic
     /**
      * @var int
      */
-    private $revision;
+    protected $revision;
 
     /**
      * Topic constructor.
@@ -42,5 +42,10 @@ class Topic
     public function getRevision(): int
     {
         return $this->revision;
+    }
+
+    public function incrementRevision()
+    {
+        $this->revision++;
     }
 }
