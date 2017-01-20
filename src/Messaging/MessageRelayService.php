@@ -45,6 +45,7 @@ class MessageRelayService extends MessageServerService
             case IncomingGeoPositionMessage::class:
                 /** @var IncomingGeoPositionMessage $message */
                 $this->writeInfoLine('MessageRelayService', 'Received geo position message. Saving to repository ...');
+                $this->writeInfoLine('MessageRelayService', json_encode($message->getGeoPosition()->toRawMessage()));
                 $this->geoPositionRepository->add($message->getGeoPosition());
                 break;
         }
