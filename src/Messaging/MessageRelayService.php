@@ -8,8 +8,10 @@ use Volante\SkyBukkit\Common\Src\Server\Messaging\IncomingMessage;
 use Volante\SkyBukkit\Common\Src\Server\Messaging\MessageServerService;
 use Volante\SkyBukkit\Common\Src\Server\Messaging\MessageService;
 use Volante\SkyBukkit\RelayServer\Src\GeoPosition\GeoPositionRepository;
+use Volante\SkyBukkit\RelayServer\Src\Network\Client;
 use Volante\SkyBukkit\RelayServer\Src\Network\ClientFactory;
 use Volante\SkyBukkit\RelayServer\Src\Subscription\RequestTopicStatusMessage;
+use Volante\SkyBukkit\RelayServer\Src\Subscription\SubscriptionStatusMessage;
 use Volante\SkyBukkit\RelayServer\Src\Subscription\TopicStatusMessageFactory;
 
 /**
@@ -59,9 +61,16 @@ class MessageRelayService extends MessageServerService
                 $this->geoPositionRepository->add($message->getGeoPosition());
                 break;
             case RequestTopicStatusMessage::class:
-                /** @var IncomingGeoPositionMessage $message */
+                /** @var RequestTopicStatusMessage $message */
                 $this->writeInfoLine('MessageRelayService', 'Client ' . $message->getSender()->getId() . ' requested topic status, sending status ...');
                 $message->getSender()->send(json_encode($this->topicStatusMessageFactory->getMessage()->toRawMessage()));
+                break;
+            case SubscriptionStatusMessage::class:
+                /** @var SubscriptionStatusMessage $message */
+                $this->writeInfoLine('MessageRelayService', 'Received subscription status from Client ' . $message->getSender()->getId());
+                /** @var Client $sender */
+                $sender = $message->getSender();
+                $sender->setSubscriptions($message->getStatus());
                 break;
         }
     }

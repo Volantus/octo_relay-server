@@ -13,6 +13,7 @@ use Volante\SkyBukkit\RelayServer\Src\Messaging\MessageRelayService;
 use Volante\SkyBukkit\RelayServer\Src\Network\Client;
 use Volante\SkyBukkit\RelayServer\Src\Network\ClientFactory;
 use Volante\SkyBukkit\RelayServer\Src\Subscription\RequestTopicStatusMessage;
+use Volante\SkyBukkit\RelayServer\Src\Subscription\SubscriptionStatusMessage;
 use Volante\SkyBukkit\RelayServer\Src\Subscription\TopicStatus;
 use Volante\SkyBukkit\RelayServer\Src\Subscription\TopicStatusMessage;
 use Volante\SkyBukkit\RelayServer\Src\Subscription\TopicStatusMessageFactory;
@@ -90,5 +91,25 @@ class MessageRelayServiceTest extends MessageServerServiceTest
 
         $this->messageServerService->newClient($connection);
         $this->messageServerService->newMessage($connection, 'correct');
+    }
+
+    public function test_handleMessage_subscriptionStatusHandledCorrect()
+    {
+        $client = new Client(ClientRole::OPERATOR, $this->connection, -1);
+        $client->setAuthenticated();
+        $this->clientFactory->method('get')->willReturn($client);
+
+        $expectedStatus = [
+            new TopicStatus('topic1', 1),
+            new TopicStatus('topic2', 2)
+        ];
+
+        $this->messageService->expects(self::once())
+            ->method('handle')
+            ->with($client, 'correct')->willReturn(new SubscriptionStatusMessage($client, $expectedStatus));
+
+        $this->messageServerService->newClient($this->connection);
+        $this->messageServerService->newMessage($this->connection, 'correct');
+        self::assertEquals($expectedStatus, $client->getSubscriptions());
     }
 }
