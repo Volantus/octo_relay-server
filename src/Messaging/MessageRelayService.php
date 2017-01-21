@@ -9,6 +9,8 @@ use Volante\SkyBukkit\Common\Src\Server\Messaging\MessageServerService;
 use Volante\SkyBukkit\Common\Src\Server\Messaging\MessageService;
 use Volante\SkyBukkit\RelayServer\Src\GeoPosition\GeoPositionRepository;
 use Volante\SkyBukkit\RelayServer\Src\Network\ClientFactory;
+use Volante\SkyBukkit\RelayServer\Src\Subscription\RequestTopicStatusMessage;
+use Volante\SkyBukkit\RelayServer\Src\Subscription\TopicStatusMessageFactory;
 
 /**
  * Class MessageRelayService
@@ -22,17 +24,24 @@ class MessageRelayService extends MessageServerService
     private $geoPositionRepository;
 
     /**
+     * @var TopicStatusMessageFactory
+     */
+    private $topicStatusMessageFactory;
+
+    /**
      * MessageRelayService constructor.
      *
      * @param OutputInterface                     $output
      * @param IncomingMessageCreationService|null $messageService
      * @param ClientFactory|null                  $clientFactory
      * @param GeoPositionRepository               $geoPositionRepository
+     * @param TopicStatusMessageFactory           $topicStatusMessageFactory
      */
-    public function __construct(OutputInterface $output, IncomingMessageCreationService $messageService = null, ClientFactory $clientFactory = null, GeoPositionRepository $geoPositionRepository = null)
+    public function __construct(OutputInterface $output, IncomingMessageCreationService $messageService = null, ClientFactory $clientFactory = null, GeoPositionRepository $geoPositionRepository = null, TopicStatusMessageFactory $topicStatusMessageFactory = null)
     {
         parent::__construct($output, $messageService ?: new IncomingMessageCreationService(), $clientFactory ?: new ClientFactory());
         $this->geoPositionRepository = $geoPositionRepository ?: new GeoPositionRepository();
+        $this->topicStatusMessageFactory = $topicStatusMessageFactory ?: new TopicStatusMessageFactory($this->geoPositionRepository);
     }
 
     /**
@@ -48,6 +57,11 @@ class MessageRelayService extends MessageServerService
                 $this->writeInfoLine('MessageRelayService', 'Received geo position message. Saving to repository ...');
                 $this->writeInfoLine('MessageRelayService', json_encode($message->getGeoPosition()->toRawMessage()));
                 $this->geoPositionRepository->add($message->getGeoPosition());
+                break;
+            case RequestTopicStatusMessage::class:
+                /** @var IncomingGeoPositionMessage $message */
+                $this->writeInfoLine('MessageRelayService', 'Client ' . $message->getSender()->getId() . ' requested topic status, sending status ...');
+                $message->getSender()->send(json_encode($this->topicStatusMessageFactory->getMessage()->toRawMessage()));
                 break;
         }
     }
