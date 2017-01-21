@@ -46,7 +46,7 @@ class TopicStatusMessage extends OutgoingMessage
     /**
      * @return array
      */
-    protected function getRawData(): array
+    public function getRawData(): array
     {
         return [
             'status' => $this->status

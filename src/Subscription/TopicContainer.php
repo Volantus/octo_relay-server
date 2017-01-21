@@ -8,8 +8,21 @@ use Volante\SkyBukkit\Common\Src\Client\OutgoingMessage;
  * Class TopicMessage
  * @package Volante\SkyBukkit\RelayServer\Src\Subscription
  */
-class TopicContainer
+class TopicContainer extends OutgoingMessage
 {
+    const DATE_FORMAT = 'Y-m-d H:i:s';
+    const TYPE = 'topicContainer';
+
+    /**
+     * @var string
+     */
+    protected $type = self::TYPE;
+
+    /**
+     * @var string
+     */
+    protected $messageTitle = 'Topic container';
+
     /**
      * @var TopicStatus
      */
@@ -59,5 +72,17 @@ class TopicContainer
     public function getPayload(): OutgoingMessage
     {
         return $this->payload;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRawData(): array
+    {
+        return [
+            'topic'       => $this->topic,
+            'receivedAt'  => $this->receivedAt->format(self::DATE_FORMAT),
+            'payload'     => $this->payload->getRawData()
+        ];
     }
 }
