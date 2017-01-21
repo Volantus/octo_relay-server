@@ -7,6 +7,7 @@ use Volante\SkyBukkit\Common\Src\General\Role\ClientRole;
 use Volante\SkyBukkit\Common\Src\Server\Messaging\MessageServerService;
 use Volante\SkyBukkit\Common\Tests\Server\Messaging\MessageServerServiceTest;
 use Volante\SkyBukkit\RelayServer\Src\GeoPosition\GeoPositionRepository;
+use Volante\SkyBukkit\RelayServer\Src\Messaging\IncomingMessageCreationService;
 use Volante\SkyBukkit\RelayServer\Src\Messaging\MessageRelayService;
 use Volante\SkyBukkit\RelayServer\Src\Network\Client;
 use Volante\SkyBukkit\RelayServer\Src\Network\ClientFactory;
@@ -34,6 +35,7 @@ class MessageRelayServiceTest extends MessageServerServiceTest
     protected function createService(): MessageServerService
     {
         $this->clientFactory = $this->getMockBuilder(ClientFactory::class)->disableOriginalConstructor()->getMock();
+        $this->messageService = $this->getMockBuilder(IncomingMessageCreationService::class)->disableOriginalConstructor()->getMock();
         return new MessageRelayService($this->dummyOutput, $this->messageService, $this->clientFactory, $this->geoPositionRepository);
     }
 

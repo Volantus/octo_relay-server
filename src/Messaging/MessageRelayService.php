@@ -23,14 +23,15 @@ class MessageRelayService extends MessageServerService
 
     /**
      * MessageRelayService constructor.
-     * @param OutputInterface $output
-     * @param MessageService|null $messageService
-     * @param ClientFactory|null $clientFactory
-     * @param GeoPositionRepository $geoPositionRepository
+     *
+     * @param OutputInterface                     $output
+     * @param IncomingMessageCreationService|null $messageService
+     * @param ClientFactory|null                  $clientFactory
+     * @param GeoPositionRepository               $geoPositionRepository
      */
-    public function __construct(OutputInterface $output, MessageService $messageService = null, ClientFactory $clientFactory = null, GeoPositionRepository $geoPositionRepository = null)
+    public function __construct(OutputInterface $output, IncomingMessageCreationService $messageService = null, ClientFactory $clientFactory = null, GeoPositionRepository $geoPositionRepository = null)
     {
-        parent::__construct($output, $messageService, $clientFactory ?: new ClientFactory());
+        parent::__construct($output, $messageService ?: new IncomingMessageCreationService(), $clientFactory ?: new ClientFactory());
         $this->geoPositionRepository = $geoPositionRepository ?: new GeoPositionRepository();
     }
 
