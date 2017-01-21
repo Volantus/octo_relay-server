@@ -12,6 +12,7 @@ use Volante\SkyBukkit\RelayServer\Src\Network\Client;
 use Volante\SkyBukkit\RelayServer\Src\Network\ClientFactory;
 use Volante\SkyBukkit\RelayServer\Src\Subscription\RequestTopicStatusMessage;
 use Volante\SkyBukkit\RelayServer\Src\Subscription\SubscriptionStatusMessage;
+use Volante\SkyBukkit\RelayServer\Src\Subscription\TopicStatus;
 use Volante\SkyBukkit\RelayServer\Src\Subscription\TopicStatusMessageFactory;
 
 /**
@@ -29,6 +30,11 @@ class MessageRelayService extends MessageServerService
      * @var TopicStatusMessageFactory
      */
     private $topicStatusMessageFactory;
+
+    /**
+     * @var Client[]
+     */
+    protected $clients = [];
 
     /**
      * MessageRelayService constructor.
@@ -59,6 +65,7 @@ class MessageRelayService extends MessageServerService
                 $this->writeInfoLine('MessageRelayService', 'Received geo position message. Saving to repository ...');
                 $this->writeInfoLine('MessageRelayService', json_encode($message->getGeoPosition()->toRawMessage()));
                 $this->geoPositionRepository->add($message->getGeoPosition());
+                $this->fullFillSubscriptions();
                 break;
             case RequestTopicStatusMessage::class:
                 /** @var RequestTopicStatusMessage $message */
@@ -71,6 +78,32 @@ class MessageRelayService extends MessageServerService
                 /** @var Client $sender */
                 $sender = $message->getSender();
                 $sender->setSubscriptions($message->getStatus());
+                $this->fullFillSubscriptions();
+                break;
+        }
+    }
+
+    protected function fullFillSubscriptions()
+    {
+        foreach ($this->clients as $client) {
+            foreach ($client->getSubscriptions() as $subscription) {
+                $this->checkSubscription($client, $subscription);
+            }
+        }
+    }
+
+    /**
+     * @param Client      $client
+     * @param TopicStatus $subscription
+     */
+    protected function checkSubscription(Client $client, TopicStatus $subscription)
+    {
+        switch ($subscription->getName()) {
+            case GeoPositionRepository::TOPIC:
+                $revision = $subscription->getRevision() + 1;
+                foreach ($this->geoPositionRepository->get($revision) as $geoPosition) {
+                    $client->send(json_encode($geoPosition->toRawMessage()));
+                }
                 break;
         }
     }

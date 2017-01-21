@@ -100,6 +100,17 @@ abstract class TopicRepositoryTestCase extends \PHPUnit_Framework_TestCase
         self::assertEquals(1, $result[1]->getTopic()->getRevision());
     }
 
+    public function test_get_revisionTooHigh()
+    {
+        $expected = [
+            $this->createOutgoingMessage(),
+            $this->createOutgoingMessage()
+        ];
+        $this->repository->add($expected[0]);
+        $this->repository->add($expected[1]);
+        self::assertEquals([], $this->repository->get(10));
+    }
+
     public function test_get_holdCountRespected()
     {
         for($i = 0; $i < 20; $i++) {

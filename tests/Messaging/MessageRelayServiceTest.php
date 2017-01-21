@@ -2,6 +2,7 @@
 namespace Volante\SkyBukkit\RelayServer\Tests\Messaging;
 
 use Ratchet\ConnectionInterface;
+use Ratchet\Wamp\Topic;
 use Volante\SkyBukkit\Common\Src\General\GeoPosition\GeoPosition;
 use Volante\SkyBukkit\Common\Src\General\GeoPosition\IncomingGeoPositionMessage;
 use Volante\SkyBukkit\Common\Src\General\Role\ClientRole;
@@ -14,6 +15,7 @@ use Volante\SkyBukkit\RelayServer\Src\Network\Client;
 use Volante\SkyBukkit\RelayServer\Src\Network\ClientFactory;
 use Volante\SkyBukkit\RelayServer\Src\Subscription\RequestTopicStatusMessage;
 use Volante\SkyBukkit\RelayServer\Src\Subscription\SubscriptionStatusMessage;
+use Volante\SkyBukkit\RelayServer\Src\Subscription\TopicContainer;
 use Volante\SkyBukkit\RelayServer\Src\Subscription\TopicStatus;
 use Volante\SkyBukkit\RelayServer\Src\Subscription\TopicStatusMessage;
 use Volante\SkyBukkit\RelayServer\Src\Subscription\TopicStatusMessageFactory;
@@ -111,5 +113,66 @@ class MessageRelayServiceTest extends MessageServerServiceTest
         $this->messageServerService->newClient($this->connection);
         $this->messageServerService->newMessage($this->connection, 'correct');
         self::assertEquals($expectedStatus, $client->getSubscriptions());
+    }
+
+    public function test_handleMessage_geoPositionMessage_subscriptionFullFilled()
+    {
+        $topicContainer = new TopicContainer(new TopicStatus(GeoPositionRepository::TOPIC, 11), new GeoPosition(1, 2, 3));
+
+        /** @var ConnectionInterface|\PHPUnit_Framework_MockObject_MockObject $connection */
+        $connection = $this->getMockBuilder(ConnectionInterface::class)->getMock();
+        $connection->expects(self::once())
+            ->method('send')
+            ->with('{"type":"topicContainer","title":"Topic container","data":{"topic":{"name":"geoPosition","revision":11},"receivedAt":"' . $topicContainer->getReceivedAt()->format(TopicContainer::DATE_FORMAT) . '","payload":{"latitude":1,"longitude":2,"altitude":3}}}');
+
+        $client = new Client(ClientRole::OPERATOR, $connection, -1);
+        $client->setSubscriptions([new TopicStatus(GeoPositionRepository::TOPIC, 9)]);
+        $client->setAuthenticated();
+
+        $this->clientFactory->method('get')->willReturn($client);
+
+        $this->messageService->expects(self::once())
+            ->method('handle')
+            ->with($client, 'correct')->willReturn(new IncomingGeoPositionMessage($client, new GeoPosition(1, 2, 3)));
+
+        $this->geoPositionRepository->expects(self::once())
+            ->method('get')->with(10)
+            ->willReturn([$topicContainer]);
+
+        $this->messageServerService->newClient($connection);
+        $this->messageServerService->newMessage($connection, 'correct');
+    }
+
+    public function test_handleMessage_subscriptionStatus_subscriptionFullFilled()
+    {
+        $topicContainer = new TopicContainer(new TopicStatus(GeoPositionRepository::TOPIC, 11), new GeoPosition(1, 2, 3));
+
+        /** @var ConnectionInterface|\PHPUnit_Framework_MockObject_MockObject $connection */
+        $connection = $this->getMockBuilder(ConnectionInterface::class)->getMock();
+        $connection->expects(self::once())
+            ->method('send')
+            ->with('{"type":"topicContainer","title":"Topic container","data":{"topic":{"name":"geoPosition","revision":11},"receivedAt":"' . $topicContainer->getReceivedAt()->format(TopicContainer::DATE_FORMAT) . '","payload":{"latitude":1,"longitude":2,"altitude":3}}}');
+
+        $client = new Client(ClientRole::OPERATOR, $connection, -1);
+        $client->setSubscriptions([new TopicStatus(GeoPositionRepository::TOPIC, 9)]);
+        $client->setAuthenticated();
+
+        $this->clientFactory->method('get')->willReturn($client);
+
+        $expectedStatus = [
+            new TopicStatus(GeoPositionRepository::TOPIC, 9),
+            new TopicStatus('topic2', 2)
+        ];
+
+        $this->messageService->expects(self::once())
+            ->method('handle')
+            ->with($client, 'correct')->willReturn(new SubscriptionStatusMessage($client, $expectedStatus));
+
+        $this->geoPositionRepository->expects(self::once())
+            ->method('get')->with(10)
+            ->willReturn([$topicContainer]);
+
+        $this->messageServerService->newClient($connection);
+        $this->messageServerService->newMessage($connection, 'correct');
     }
 }
