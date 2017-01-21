@@ -5,7 +5,7 @@ namespace Volante\SkyBukkit\RelayServer\Src\Subscription;
  * Class Subscription
  * @package Volante\SkyBukkit\Monitor\Src\Subscription
  */
-class TopicStatus
+class TopicStatus implements \JsonSerializable
 {
     /**
      * @var string
@@ -47,5 +47,16 @@ class TopicStatus
     public function incrementRevision()
     {
         $this->revision++;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    function jsonSerialize()
+    {
+        return [
+            'name'     => $this->name,
+            'revision' => $this->revision
+        ];
     }
 }
