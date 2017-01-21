@@ -15,6 +15,14 @@ class Client extends \Volante\SkyBukkit\Common\Src\Server\Network\Client
     private $subscriptions = [];
 
     /**
+     * @param TopicStatus[] $subscriptions
+     */
+    public function setSubscriptions(array $subscriptions)
+    {
+        $this->subscriptions = $subscriptions;
+    }
+
+    /**
      * @return TopicStatus[]
      */
     public function getSubscriptions(): array
