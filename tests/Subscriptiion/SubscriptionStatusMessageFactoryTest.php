@@ -43,12 +43,12 @@ class SubscriptionStatusMessageFactoryTest extends MessageFactoryTestCase
 
     /**
      * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Invalid subscriptionStatusMessage message: topic key is missing
+     * @expectedExceptionMessage Invalid subscriptionStatusMessage message: name key is missing
      */
     public function test_create_statusTopicMissing()
     {
         $data = $this->getCorrectMessageData();
-        unset($data['status'][0]['topic']);
+        unset($data['status'][0]['name']);
         $message = $this->getRawMessage($data);
         $this->callFactory($message);
     }
@@ -67,12 +67,12 @@ class SubscriptionStatusMessageFactoryTest extends MessageFactoryTestCase
 
     /**
      * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Invalid subscriptionStatusMessage message: value of key topic is not a string
+     * @expectedExceptionMessage Invalid subscriptionStatusMessage message: value of key name is not a string
      */
     public function test_create_statusTopicNotString()
     {
         $data = $this->getCorrectMessageData();
-        $data['status'][0]['topic'] = [];
+        $data['status'][0]['name'] = [];
         $message = $this->getRawMessage($data);
         $this->callFactory($message);
     }
@@ -130,8 +130,8 @@ class SubscriptionStatusMessageFactoryTest extends MessageFactoryTestCase
     {
         return [
             'status' => [
-                ['topic' => 'topic1', 'revision' => 16],
-                ['topic' => 'topic2', 'revision' => 3]
+                ['name' => 'topic1', 'revision' => 16],
+                ['name' => 'topic2', 'revision' => 3]
             ]
         ];
     }

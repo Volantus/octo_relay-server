@@ -29,10 +29,10 @@ class SubscriptionStatusMessageFactory extends MessageFactory
 
         $this->validateArray($data, 'status');
         foreach ($data['status'] as $statusData) {
-            $this->validateString($statusData, 'topic');
+            $this->validateString($statusData, 'name');
             $this->validateNumeric($statusData, 'revision');
 
-            $status[] = new TopicStatus($statusData['topic'], $statusData['revision']);
+            $status[] = new TopicStatus($statusData['name'], $statusData['revision']);
         }
 
         return new SubscriptionStatusMessage($rawMessage->getSender(), $status);
