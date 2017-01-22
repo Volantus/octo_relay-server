@@ -103,7 +103,9 @@ class MessageRelayService extends MessageServerService
                 $revision = $subscription->getRevision() + 1;
                 foreach ($this->geoPositionRepository->get($revision) as $geoPosition) {
                     $client->send(json_encode($geoPosition->toRawMessage()));
+                    $subscription->incrementRevision();
                 }
+
                 break;
         }
     }

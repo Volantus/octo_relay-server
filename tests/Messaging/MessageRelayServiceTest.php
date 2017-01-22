@@ -141,6 +141,7 @@ class MessageRelayServiceTest extends MessageServerServiceTest
 
         $this->messageServerService->newClient($connection);
         $this->messageServerService->newMessage($connection, 'correct');
+        self::assertEquals(10, $client->getSubscriptions()[0]->getRevision());
     }
 
     public function test_handleMessage_subscriptionStatus_subscriptionFullFilled()
@@ -174,5 +175,6 @@ class MessageRelayServiceTest extends MessageServerServiceTest
 
         $this->messageServerService->newClient($connection);
         $this->messageServerService->newMessage($connection, 'correct');
+        self::assertEquals(10, $client->getSubscriptions()[0]->getRevision());
     }
 }
