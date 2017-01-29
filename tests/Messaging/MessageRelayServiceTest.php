@@ -5,10 +5,13 @@ use Ratchet\ConnectionInterface;
 use Ratchet\Wamp\Topic;
 use Volante\SkyBukkit\Common\Src\General\GeoPosition\GeoPosition;
 use Volante\SkyBukkit\Common\Src\General\GeoPosition\IncomingGeoPositionMessage;
+use Volante\SkyBukkit\Common\Src\General\GyroStatus\GyroStatus;
+use Volante\SkyBukkit\Common\Src\General\GyroStatus\IncomingGyroStatusMessage;
 use Volante\SkyBukkit\Common\Src\General\Role\ClientRole;
 use Volante\SkyBukkit\Common\Src\Server\Messaging\MessageServerService;
 use Volante\SkyBukkit\Common\Tests\Server\Messaging\MessageServerServiceTest;
 use Volante\SkyBukkit\RelayServer\Src\GeoPosition\GeoPositionRepository;
+use Volante\SkyBukkit\RelayServer\Src\GyroStatus\GyroStatusRepository;
 use Volante\SkyBukkit\RelayServer\Src\Messaging\IncomingMessageCreationService;
 use Volante\SkyBukkit\RelayServer\Src\Messaging\MessageRelayService;
 use Volante\SkyBukkit\RelayServer\Src\Network\Client;
@@ -32,6 +35,11 @@ class MessageRelayServiceTest extends MessageServerServiceTest
     private $geoPositionRepository;
 
     /**
+     * @var GyroStatusRepository|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private $gyroStatusRepository;
+
+    /**
      * @var TopicStatusMessageFactory|\PHPUnit_Framework_MockObject_MockObject
      */
     private $topicStatusMessageFactory;
@@ -39,6 +47,7 @@ class MessageRelayServiceTest extends MessageServerServiceTest
     protected function setUp()
     {
         $this->geoPositionRepository = $this->getMockBuilder(GeoPositionRepository::class)->disableOriginalConstructor()->getMock();
+        $this->gyroStatusRepository = $this->getMockBuilder(GyroStatusRepository::class)->disableOriginalConstructor()->getMock();
         $this->topicStatusMessageFactory = $this->getMockBuilder(TopicStatusMessageFactory::class)->disableOriginalConstructor()->getMock();
         parent::setUp();
     }
@@ -50,7 +59,7 @@ class MessageRelayServiceTest extends MessageServerServiceTest
     {
         $this->clientFactory = $this->getMockBuilder(ClientFactory::class)->disableOriginalConstructor()->getMock();
         $this->messageService = $this->getMockBuilder(IncomingMessageCreationService::class)->disableOriginalConstructor()->getMock();
-        return new MessageRelayService($this->dummyOutput, $this->messageService, $this->clientFactory, $this->geoPositionRepository, $this->topicStatusMessageFactory);
+        return new MessageRelayService($this->dummyOutput, $this->messageService, $this->clientFactory, $this->geoPositionRepository, $this->gyroStatusRepository, $this->topicStatusMessageFactory);
     }
 
     public function test_handleMessage_geoPositionMessage()
@@ -66,6 +75,24 @@ class MessageRelayServiceTest extends MessageServerServiceTest
         $this->geoPositionRepository->expects(self::once())
             ->method('add')
             ->with(new GeoPosition(1, 2, 3));
+
+        $this->messageServerService->newClient($this->connection);
+        $this->messageServerService->newMessage($this->connection, 'correct');
+    }
+
+    public function test_handleMessage_gyroStatusMessage()
+    {
+        $client = new Client(ClientRole::STATUS_BROKER, $this->connection, -1);
+        $client->setAuthenticated();
+        $this->clientFactory->method('get')->willReturn($client);
+
+        $this->messageService->expects(self::once())
+            ->method('handle')
+            ->with($client, 'correct')->willReturn(new IncomingGyroStatusMessage($client, new GyroStatus(1, 2, 3)));
+
+        $this->gyroStatusRepository->expects(self::once())
+            ->method('add')
+            ->with(new GyroStatus(1, 2, 3));
 
         $this->messageServerService->newClient($this->connection);
         $this->messageServerService->newMessage($this->connection, 'correct');
@@ -136,6 +163,35 @@ class MessageRelayServiceTest extends MessageServerServiceTest
             ->with($client, 'correct')->willReturn(new IncomingGeoPositionMessage($client, new GeoPosition(1, 2, 3)));
 
         $this->geoPositionRepository->expects(self::once())
+            ->method('get')->with(10)
+            ->willReturn([$topicContainer]);
+
+        $this->messageServerService->newClient($connection);
+        $this->messageServerService->newMessage($connection, 'correct');
+        self::assertEquals(10, $client->getSubscriptions()[0]->getRevision());
+    }
+
+    public function test_handleMessage_gyroStatusMessage_subscriptionFullFilled()
+    {
+        $topicContainer = new TopicContainer(new TopicStatus(GyroStatusRepository::TOPIC, 11), new GyroStatus(1, 2, 3));
+
+        /** @var ConnectionInterface|\PHPUnit_Framework_MockObject_MockObject $connection */
+        $connection = $this->getMockBuilder(ConnectionInterface::class)->getMock();
+        $connection->expects(self::once())
+            ->method('send')
+            ->with('{"type":"topicContainer","title":"Topic container","data":{"topic":{"name":"gyroStatus","revision":11},"receivedAt":"' . $topicContainer->getReceivedAt()->format(TopicContainer::DATE_FORMAT) . '","payload":{"yaw":1,"pitch":3,"roll":2}}}');
+
+        $client = new Client(ClientRole::OPERATOR, $connection, -1);
+        $client->setSubscriptions([new TopicStatus(GyroStatusRepository::TOPIC, 9)]);
+        $client->setAuthenticated();
+
+        $this->clientFactory->method('get')->willReturn($client);
+
+        $this->messageService->expects(self::once())
+            ->method('handle')
+            ->with($client, 'correct')->willReturn(new IncomingGyroStatusMessage($client, new GyroStatus(1, 2, 3)));
+
+        $this->gyroStatusRepository->expects(self::once())
             ->method('get')->with(10)
             ->willReturn([$topicContainer]);
 

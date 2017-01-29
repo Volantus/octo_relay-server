@@ -4,14 +4,17 @@ namespace Volante\SkyBukkit\RelayServer\Src\Messaging;
 use Symfony\Component\Console\Output\OutputInterface;
 use Volante\SkyBukkit\Common\Src\General\CLI\OutputOperations;
 use Volante\SkyBukkit\Common\Src\General\GeoPosition\IncomingGeoPositionMessage;
+use Volante\SkyBukkit\Common\Src\General\GyroStatus\IncomingGyroStatusMessage;
 use Volante\SkyBukkit\Common\Src\Server\Messaging\IncomingMessage;
 use Volante\SkyBukkit\Common\Src\Server\Messaging\MessageServerService;
 use Volante\SkyBukkit\Common\Src\Server\Messaging\MessageService;
 use Volante\SkyBukkit\RelayServer\Src\GeoPosition\GeoPositionRepository;
+use Volante\SkyBukkit\RelayServer\Src\GyroStatus\GyroStatusRepository;
 use Volante\SkyBukkit\RelayServer\Src\Network\Client;
 use Volante\SkyBukkit\RelayServer\Src\Network\ClientFactory;
 use Volante\SkyBukkit\RelayServer\Src\Subscription\RequestTopicStatusMessage;
 use Volante\SkyBukkit\RelayServer\Src\Subscription\SubscriptionStatusMessage;
+use Volante\SkyBukkit\RelayServer\Src\Subscription\TopicRepository;
 use Volante\SkyBukkit\RelayServer\Src\Subscription\TopicStatus;
 use Volante\SkyBukkit\RelayServer\Src\Subscription\TopicStatusMessageFactory;
 
@@ -27,9 +30,19 @@ class MessageRelayService extends MessageServerService
     private $geoPositionRepository;
 
     /**
+     * @var GyroStatusRepository
+     */
+    private $gyroStatusRepository;
+
+    /**
      * @var TopicStatusMessageFactory
      */
     private $topicStatusMessageFactory;
+
+    /**
+     * @var TopicRepository[]
+     */
+    private $repositories = [];
 
     /**
      * @var Client[]
@@ -39,16 +52,22 @@ class MessageRelayService extends MessageServerService
     /**
      * MessageRelayService constructor.
      *
-     * @param OutputInterface                     $output
+     * @param OutputInterface $output
      * @param IncomingMessageCreationService|null $messageService
-     * @param ClientFactory|null                  $clientFactory
-     * @param GeoPositionRepository               $geoPositionRepository
-     * @param TopicStatusMessageFactory           $topicStatusMessageFactory
+     * @param ClientFactory|null $clientFactory
+     * @param GeoPositionRepository $geoPositionRepository
+     * @param GyroStatusRepository $gyroStatusRepository
+     * @param TopicStatusMessageFactory $topicStatusMessageFactory
      */
-    public function __construct(OutputInterface $output, IncomingMessageCreationService $messageService = null, ClientFactory $clientFactory = null, GeoPositionRepository $geoPositionRepository = null, TopicStatusMessageFactory $topicStatusMessageFactory = null)
+    public function __construct(OutputInterface $output, IncomingMessageCreationService $messageService = null, ClientFactory $clientFactory = null, GeoPositionRepository $geoPositionRepository = null, GyroStatusRepository $gyroStatusRepository = null, TopicStatusMessageFactory $topicStatusMessageFactory = null)
     {
         parent::__construct($output, $messageService ?: new IncomingMessageCreationService(), $clientFactory ?: new ClientFactory());
         $this->geoPositionRepository = $geoPositionRepository ?: new GeoPositionRepository();
+        $this->gyroStatusRepository = $gyroStatusRepository ?: new GyroStatusRepository();
+
+        $this->repositories[GeoPositionRepository::TOPIC] = $this->geoPositionRepository;
+        $this->repositories[GyroStatusRepository::TOPIC] = $this->gyroStatusRepository;
+
         $this->topicStatusMessageFactory = $topicStatusMessageFactory ?: new TopicStatusMessageFactory($this->geoPositionRepository);
     }
 
@@ -62,8 +81,14 @@ class MessageRelayService extends MessageServerService
         switch (get_class($message)) {
             case IncomingGeoPositionMessage::class:
                 /** @var IncomingGeoPositionMessage $message */
-                $this->writeInfoLine('MessageRelayService', 'Received geo position message. Saving to repository ...');
+                $this->writeDebugLine('MessageRelayService', 'Received geo position message. Saving to repository ...');
                 $this->geoPositionRepository->add($message->getGeoPosition());
+                $this->fullFillSubscriptions();
+                break;
+            case IncomingGyroStatusMessage::class:
+                /** @var IncomingGyroStatusMessage $message */
+                $this->writeDebugLine('MessageRelayService', 'Received gyro status message. Saving to repository ...');
+                $this->gyroStatusRepository->add($message->getGyroStatus());
                 $this->fullFillSubscriptions();
                 break;
             case RequestTopicStatusMessage::class:
@@ -97,15 +122,10 @@ class MessageRelayService extends MessageServerService
      */
     protected function checkSubscription(Client $client, TopicStatus $subscription)
     {
-        switch ($subscription->getName()) {
-            case GeoPositionRepository::TOPIC:
-                $revision = $subscription->getRevision() + 1;
-                foreach ($this->geoPositionRepository->get($revision) as $geoPosition) {
-                    $client->send(json_encode($geoPosition->toRawMessage()));
-                    $subscription->incrementRevision();
-                }
-
-                break;
+        $revision = $subscription->getRevision() + 1;
+        foreach ($this->repositories[$subscription->getName()]->get($revision) as $message) {
+            $client->send(json_encode($message->toRawMessage()));
+            $subscription->incrementRevision();
         }
     }
 
