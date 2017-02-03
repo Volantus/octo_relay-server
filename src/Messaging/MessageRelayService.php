@@ -68,7 +68,7 @@ class MessageRelayService extends MessageServerService
         $this->repositories[GeoPositionRepository::TOPIC] = $this->geoPositionRepository;
         $this->repositories[GyroStatusRepository::TOPIC] = $this->gyroStatusRepository;
 
-        $this->topicStatusMessageFactory = $topicStatusMessageFactory ?: new TopicStatusMessageFactory($this->geoPositionRepository);
+        $this->topicStatusMessageFactory = $topicStatusMessageFactory ?: new TopicStatusMessageFactory($this->geoPositionRepository, $this->gyroStatusRepository);
     }
 
     /**
