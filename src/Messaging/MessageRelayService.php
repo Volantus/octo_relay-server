@@ -124,6 +124,7 @@ class MessageRelayService extends MessageServerService
     {
         $revision = $subscription->getRevision() + 1;
         foreach ($this->repositories[$subscription->getName()]->get($revision) as $message) {
+            $this->writeInfoLine('Debug', $revision);
             $client->send(json_encode($message->toRawMessage()));
             $subscription->incrementRevision();
         }
