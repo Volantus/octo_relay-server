@@ -2,6 +2,7 @@
 namespace Volante\SkyBukkit\RelayServer\Src\Subscription;
 
 use Volante\SkyBukkit\RelayServer\Src\GeoPosition\GeoPositionRepository;
+use Volante\SkyBukkit\RelayServer\Src\GyroStatus\GyroStatusRepository;
 
 /**
  * Class TopicStatusMessageFactory
@@ -15,13 +16,20 @@ class TopicStatusMessageFactory
     private $geoPositionRepository;
 
     /**
+     * @var GyroStatusRepository
+     */
+    private $gyroStatusRepository;
+
+    /**
      * TopicStatusMessageFactory constructor.
      *
      * @param GeoPositionRepository $geoPositionRepository
+     * @param GyroStatusRepository  $gyroStatusRepository
      */
-    public function __construct(GeoPositionRepository $geoPositionRepository)
+    public function __construct(GeoPositionRepository $geoPositionRepository, GyroStatusRepository $gyroStatusRepository)
     {
         $this->geoPositionRepository = $geoPositionRepository;
+        $this->gyroStatusRepository = $gyroStatusRepository;
     }
 
     /**
@@ -30,7 +38,8 @@ class TopicStatusMessageFactory
     public function getMessage() : TopicStatusMessage
     {
         $status = [
-            $this->geoPositionRepository->getTopicStatus()
+            $this->geoPositionRepository->getTopicStatus(),
+            $this->gyroStatusRepository->getTopicStatus()
         ];
         return new TopicStatusMessage($status);
     }

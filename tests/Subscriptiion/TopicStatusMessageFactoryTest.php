@@ -2,6 +2,7 @@
 namespace Volante\SkyBukkit\RelayServer\Tests\Subscription;
 
 use Volante\SkyBukkit\RelayServer\Src\GeoPosition\GeoPositionRepository;
+use Volante\SkyBukkit\RelayServer\Src\GyroStatus\GyroStatusRepository;
 use Volante\SkyBukkit\RelayServer\Src\Subscription\TopicStatus;
 use Volante\SkyBukkit\RelayServer\Src\Subscription\TopicStatusMessage;
 use Volante\SkyBukkit\RelayServer\Src\Subscription\TopicStatusMessageFactory;
@@ -23,10 +24,16 @@ class TopicStatusMessageFactoryTest extends \PHPUnit_Framework_TestCase
      */
     private $geoRepository;
 
+    /**
+     * @var GyroStatusRepository|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private $gyroRepository;
+
     protected function setUp()
     {
         $this->geoRepository = $this->getMockBuilder(GeoPositionRepository::class)->disableOriginalConstructor()->getMock();
-        $this->factory = new TopicStatusMessageFactory($this->geoRepository);
+        $this->gyroRepository = $this->getMockBuilder(GyroStatusRepository::class)->disableOriginalConstructor()->getMock();
+        $this->factory = new TopicStatusMessageFactory($this->geoRepository, $this->gyroRepository);
     }
 
     public function test_getMessage_repositoryCalled()
@@ -36,8 +43,13 @@ class TopicStatusMessageFactoryTest extends \PHPUnit_Framework_TestCase
             ->method('getTopicStatus')
             ->willReturn($geoTopicStatus);
 
+        $gyroTopicStatus = new TopicStatus(GyroStatusRepository::TOPIC, 10);
+        $this->gyroRepository->expects(self::once())
+            ->method('getTopicStatus')
+            ->willReturn($gyroTopicStatus);
+
         $result = $this->factory->getMessage();
         self::assertInstanceOf(TopicStatusMessage::class, $result);
-        self::assertEquals([$geoTopicStatus], $result->getStatus());
+        self::assertEquals([$geoTopicStatus, $gyroTopicStatus], $result->getStatus());
     }
 }
