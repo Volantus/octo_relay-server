@@ -3,6 +3,7 @@ namespace Volante\SkyBukkit\RelayServer\Tests\Subscription;
 
 use Volante\SkyBukkit\RelayServer\Src\GeoPosition\GeoPositionRepository;
 use Volante\SkyBukkit\RelayServer\Src\GyroStatus\GyroStatusRepository;
+use Volante\SkyBukkit\RelayServer\Src\Motor\MotorStatusRepository;
 use Volante\SkyBukkit\RelayServer\Src\Subscription\TopicStatus;
 use Volante\SkyBukkit\RelayServer\Src\Subscription\TopicStatusMessage;
 use Volante\SkyBukkit\RelayServer\Src\Subscription\TopicStatusMessageFactory;
@@ -29,11 +30,17 @@ class TopicStatusMessageFactoryTest extends \PHPUnit_Framework_TestCase
      */
     private $gyroRepository;
 
+    /**
+     * @var MotorStatusRepository|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private $motorRepository;
+
     protected function setUp()
     {
         $this->geoRepository = $this->getMockBuilder(GeoPositionRepository::class)->disableOriginalConstructor()->getMock();
         $this->gyroRepository = $this->getMockBuilder(GyroStatusRepository::class)->disableOriginalConstructor()->getMock();
-        $this->factory = new TopicStatusMessageFactory($this->geoRepository, $this->gyroRepository);
+        $this->motorRepository = $this->getMockBuilder(MotorStatusRepository::class)->disableOriginalConstructor()->getMock();
+        $this->factory = new TopicStatusMessageFactory($this->geoRepository, $this->gyroRepository, $this->motorRepository);
     }
 
     public function test_getMessage_repositoryCalled()
@@ -48,8 +55,13 @@ class TopicStatusMessageFactoryTest extends \PHPUnit_Framework_TestCase
             ->method('getTopicStatus')
             ->willReturn($gyroTopicStatus);
 
+        $motorTopicStatus = new TopicStatus(MotorStatusRepository::TOPIC, 10);
+        $this->motorRepository->expects(self::once())
+            ->method('getTopicStatus')
+            ->willReturn($motorTopicStatus);
+
         $result = $this->factory->getMessage();
         self::assertInstanceOf(TopicStatusMessage::class, $result);
-        self::assertEquals([$geoTopicStatus, $gyroTopicStatus], $result->getStatus());
+        self::assertEquals([$geoTopicStatus, $gyroTopicStatus, $motorTopicStatus], $result->getStatus());
     }
 }
