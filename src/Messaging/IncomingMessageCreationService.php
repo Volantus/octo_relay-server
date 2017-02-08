@@ -1,6 +1,7 @@
 <?php
 namespace Volante\SkyBukkit\RelayServer\Src\Messaging;
 
+use Volante\SkyBukkit\Common\Src\General\FlightController\PIDFrequencyStatusMessageFactory;
 use Volante\SkyBukkit\Common\Src\General\GeoPosition\GeoPositionMessageFactory;
 use Volante\SkyBukkit\Common\Src\General\GyroStatus\GyroStatusMessageFactory;
 use Volante\SkyBukkit\Common\Src\General\Motor\MotorStatusMessageFactory;
@@ -26,9 +27,10 @@ class IncomingMessageCreationService extends MessageService
      * @param AuthenticationMessageFactory|null $authenticationMessageFactory
      * @param GeoPositionMessageFactory|null    $geoPositionMessageFactory
      * @param GyroStatusMessageFactory          $gyroStatusMessageFactory
+     * @param MotorStatusMessageFactory         $motorStatusMessageFactory
+     * @param PIDFrequencyStatusMessageFactory  $PIDFrequencyStatusMessageFactory
      * @param RequestTopicStatusMessageFactory  $requestTopicStatusMessageFactory
      * @param SubscriptionStatusMessageFactory  $subscriptionStatusMessageFactory
-     * @param MotorStatusMessageFactory         $motorStatusMessageFactory
      */
     public function __construct(RawMessageFactory $rawMessageFactory = null,
         IntroductionMessageFactory $introductionMessageFactory = null,
@@ -36,10 +38,11 @@ class IncomingMessageCreationService extends MessageService
         GeoPositionMessageFactory $geoPositionMessageFactory = null,
         GyroStatusMessageFactory $gyroStatusMessageFactory = null,
         MotorStatusMessageFactory $motorStatusMessageFactory = null,
+        PIDFrequencyStatusMessageFactory $PIDFrequencyStatusMessageFactory = null,
         RequestTopicStatusMessageFactory $requestTopicStatusMessageFactory = null,
         SubscriptionStatusMessageFactory $subscriptionStatusMessageFactory = null
     ) {
-        parent::__construct($rawMessageFactory, $introductionMessageFactory, $authenticationMessageFactory, $geoPositionMessageFactory, $gyroStatusMessageFactory, $motorStatusMessageFactory);
+        parent::__construct($rawMessageFactory, $introductionMessageFactory, $authenticationMessageFactory, $geoPositionMessageFactory, $gyroStatusMessageFactory, $motorStatusMessageFactory, $PIDFrequencyStatusMessageFactory);
 
         $this->registerFactory($requestTopicStatusMessageFactory ?: new RequestTopicStatusMessageFactory());
         $this->registerFactory($subscriptionStatusMessageFactory ?: new SubscriptionStatusMessageFactory());
