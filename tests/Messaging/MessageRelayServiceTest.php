@@ -3,6 +3,8 @@ namespace Volante\SkyBukkit\RelayServer\Tests\Messaging;
 
 use Ratchet\ConnectionInterface;
 use Ratchet\Wamp\Topic;
+use Volante\SkyBukkit\Common\Src\General\FlightController\IncomingPIDFrequencyStatus;
+use Volante\SkyBukkit\Common\Src\General\FlightController\PIDFrequencyStatus;
 use Volante\SkyBukkit\Common\Src\General\GeoPosition\GeoPosition;
 use Volante\SkyBukkit\Common\Src\General\GeoPosition\IncomingGeoPositionMessage;
 use Volante\SkyBukkit\Common\Src\General\GyroStatus\GyroStatus;
@@ -13,6 +15,7 @@ use Volante\SkyBukkit\Common\Src\General\Motor\MotorStatus;
 use Volante\SkyBukkit\Common\Src\General\Role\ClientRole;
 use Volante\SkyBukkit\Common\Src\Server\Messaging\MessageServerService;
 use Volante\SkyBukkit\Common\Tests\Server\Messaging\MessageServerServiceTest;
+use Volante\SkyBukkit\RelayServer\Src\FlightController\PidFrequencyStatusRepository;
 use Volante\SkyBukkit\RelayServer\Src\GeoPosition\GeoPositionRepository;
 use Volante\SkyBukkit\RelayServer\Src\GyroStatus\GyroStatusRepository;
 use Volante\SkyBukkit\RelayServer\Src\Messaging\IncomingMessageCreationService;
@@ -49,6 +52,11 @@ class MessageRelayServiceTest extends MessageServerServiceTest
     private $motorStatusRepository;
 
     /**
+     * @var PidFrequencyStatusRepository|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private $pidFrequencyStatusRepository;
+
+    /**
      * @var TopicStatusMessageFactory|\PHPUnit_Framework_MockObject_MockObject
      */
     private $topicStatusMessageFactory;
@@ -58,6 +66,7 @@ class MessageRelayServiceTest extends MessageServerServiceTest
         $this->geoPositionRepository = $this->getMockBuilder(GeoPositionRepository::class)->disableOriginalConstructor()->getMock();
         $this->gyroStatusRepository = $this->getMockBuilder(GyroStatusRepository::class)->disableOriginalConstructor()->getMock();
         $this->motorStatusRepository = $this->getMockBuilder(MotorStatusRepository::class)->disableOriginalConstructor()->getMock();
+        $this->pidFrequencyStatusRepository = $this->getMockBuilder(PidFrequencyStatusRepository::class)->disableOriginalConstructor()->getMock();
         $this->topicStatusMessageFactory = $this->getMockBuilder(TopicStatusMessageFactory::class)->disableOriginalConstructor()->getMock();
         parent::setUp();
     }
@@ -69,7 +78,7 @@ class MessageRelayServiceTest extends MessageServerServiceTest
     {
         $this->clientFactory = $this->getMockBuilder(ClientFactory::class)->disableOriginalConstructor()->getMock();
         $this->messageService = $this->getMockBuilder(IncomingMessageCreationService::class)->disableOriginalConstructor()->getMock();
-        return new MessageRelayService($this->dummyOutput, $this->messageService, $this->clientFactory, $this->geoPositionRepository, $this->gyroStatusRepository, $this->motorStatusRepository, $this->topicStatusMessageFactory);
+        return new MessageRelayService($this->dummyOutput, $this->messageService, $this->clientFactory, $this->geoPositionRepository, $this->gyroStatusRepository, $this->motorStatusRepository, $this->pidFrequencyStatusRepository, $this->topicStatusMessageFactory);
     }
 
     public function test_handleMessage_geoPositionMessage()
@@ -121,6 +130,24 @@ class MessageRelayServiceTest extends MessageServerServiceTest
         $this->motorStatusRepository->expects(self::once())
             ->method('add')
             ->with(new MotorStatus([new Motor(1, Motor::ZERO_LEVEL, 22)]));
+
+        $this->messageServerService->newClient($this->connection);
+        $this->messageServerService->newMessage($this->connection, 'correct');
+    }
+
+    public function test_handleMessage_pidFrequencyStatusMessage()
+    {
+        $client = new Client(ClientRole::FLIGHT_CONTROLLER, $this->connection, -1);
+        $client->setAuthenticated();
+        $this->clientFactory->method('get')->willReturn($client);
+
+        $this->messageService->expects(self::once())
+            ->method('handle')
+            ->with($client, 'correct')->willReturn(new IncomingPIDFrequencyStatus($client, new PIDFrequencyStatus(1000, 950)));
+
+        $this->pidFrequencyStatusRepository->expects(self::once())
+            ->method('add')
+            ->with(new PIDFrequencyStatus(1000, 950));
 
         $this->messageServerService->newClient($this->connection);
         $this->messageServerService->newMessage($this->connection, 'correct');
@@ -249,6 +276,35 @@ class MessageRelayServiceTest extends MessageServerServiceTest
             ->with(self::equalTo($client), self::equalTo('correct'))->willReturn(new IncomingMotorStatusMessage($client, new MotorStatus([new Motor(1, Motor::ZERO_LEVEL, 22)])));
 
         $this->motorStatusRepository->expects(self::once())
+            ->method('get')->with(self::equalTo(10))
+            ->willReturn([$topicContainer]);
+
+        $this->messageServerService->newClient($connection);
+        $this->messageServerService->newMessage($connection, 'correct');
+        self::assertEquals(10, $client->getSubscriptions()[0]->getRevision());
+    }
+
+    public function test_handleMessage_pidFrequencyStatusMessage_subscriptionFullFilled()
+    {
+        $topicContainer = new TopicContainer(new TopicStatus(PidFrequencyStatusRepository::TOPIC, 11), new PIDFrequencyStatus(1000, 950));
+
+        /** @var ConnectionInterface|\PHPUnit_Framework_MockObject_MockObject $connection */
+        $connection = $this->getMockBuilder(ConnectionInterface::class)->getMock();
+        $connection->expects(self::once())
+            ->method('send')
+            ->with(self::equalTo('{"type":"topicContainer","title":"Topic container","data":{"topic":{"name":"' . PidFrequencyStatusRepository::TOPIC . '","revision":11},"receivedAt":"' . $topicContainer->getReceivedAt()->format(TopicContainer::DATE_FORMAT) . '","payload":{"desired":1000,"current":950}}}'));
+
+        $client = new Client(ClientRole::OPERATOR, $connection, -1);
+        $client->setSubscriptions([new TopicStatus(PidFrequencyStatusRepository::TOPIC, 9)]);
+        $client->setAuthenticated();
+
+        $this->clientFactory->method('get')->willReturn($client);
+
+        $this->messageService->expects(self::once())
+            ->method('handle')
+            ->with(self::equalTo($client), self::equalTo('correct'))->willReturn(new IncomingPIDFrequencyStatus($client, new PIDFrequencyStatus(1000, 950)));
+
+        $this->pidFrequencyStatusRepository->expects(self::once())
             ->method('get')->with(self::equalTo(10))
             ->willReturn([$topicContainer]);
 

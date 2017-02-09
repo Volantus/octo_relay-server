@@ -1,6 +1,7 @@
 <?php
 namespace Volante\SkyBukkit\RelayServer\Tests\Subscription;
 
+use Volante\SkyBukkit\RelayServer\Src\FlightController\PidFrequencyStatusRepository;
 use Volante\SkyBukkit\RelayServer\Src\GeoPosition\GeoPositionRepository;
 use Volante\SkyBukkit\RelayServer\Src\GyroStatus\GyroStatusRepository;
 use Volante\SkyBukkit\RelayServer\Src\Motor\MotorStatusRepository;
@@ -35,12 +36,18 @@ class TopicStatusMessageFactoryTest extends \PHPUnit_Framework_TestCase
      */
     private $motorRepository;
 
+    /**
+     * @var PidFrequencyStatusRepository|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private $frequencyRepository;
+
     protected function setUp()
     {
         $this->geoRepository = $this->getMockBuilder(GeoPositionRepository::class)->disableOriginalConstructor()->getMock();
         $this->gyroRepository = $this->getMockBuilder(GyroStatusRepository::class)->disableOriginalConstructor()->getMock();
         $this->motorRepository = $this->getMockBuilder(MotorStatusRepository::class)->disableOriginalConstructor()->getMock();
-        $this->factory = new TopicStatusMessageFactory($this->geoRepository, $this->gyroRepository, $this->motorRepository);
+        $this->frequencyRepository = $this->getMockBuilder(PidFrequencyStatusRepository::class)->disableOriginalConstructor()->getMock();
+        $this->factory = new TopicStatusMessageFactory($this->geoRepository, $this->gyroRepository, $this->motorRepository, $this->frequencyRepository);
     }
 
     public function test_getMessage_repositoryCalled()
@@ -60,8 +67,13 @@ class TopicStatusMessageFactoryTest extends \PHPUnit_Framework_TestCase
             ->method('getTopicStatus')
             ->willReturn($motorTopicStatus);
 
+        $frequencyTopicStatus = new TopicStatus(PidFrequencyStatusRepository::TOPIC, 10);
+        $this->frequencyRepository->expects(self::once())
+            ->method('getTopicStatus')
+            ->willReturn($frequencyTopicStatus);
+
         $result = $this->factory->getMessage();
         self::assertInstanceOf(TopicStatusMessage::class, $result);
-        self::assertEquals([$geoTopicStatus, $gyroTopicStatus, $motorTopicStatus], $result->getStatus());
+        self::assertEquals([$geoTopicStatus, $gyroTopicStatus, $motorTopicStatus, $frequencyTopicStatus], $result->getStatus());
     }
 }
