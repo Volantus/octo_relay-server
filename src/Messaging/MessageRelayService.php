@@ -5,7 +5,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Volante\SkyBukkit\Common\Src\General\FlightController\IncomingPIDFrequencyStatus;
 use Volante\SkyBukkit\Common\Src\General\GeoPosition\IncomingGeoPositionMessage;
 use Volante\SkyBukkit\Common\Src\General\GyroStatus\IncomingGyroStatusMessage;
+use Volante\SkyBukkit\Common\Src\General\Motor\IncomingMotorControlMessage;
 use Volante\SkyBukkit\Common\Src\General\Motor\IncomingMotorStatusMessage;
+use Volante\SkyBukkit\Common\Src\General\Role\ClientRole;
 use Volante\SkyBukkit\Common\Src\Server\Messaging\IncomingMessage;
 use Volante\SkyBukkit\Common\Src\Server\Messaging\MessageServerService;
 use Volante\SkyBukkit\RelayServer\Src\FlightController\PidFrequencyStatusRepository;
@@ -97,6 +99,16 @@ class MessageRelayService extends MessageServerService
         parent::handleMessage($message);
 
         switch (get_class($message)) {
+            case IncomingMotorControlMessage::class:
+                /** @var IncomingMotorControlMessage $message */
+                foreach ($this->clients as $client) {
+                    if ($client->getRole() == ClientRole::FLIGHT_CONTROLLER) {
+                        $client->send(json_encode($message->getMotorControl()->toRawMessage()));
+                        break;
+                    }
+                }
+                $this->writeDebugLine('MessageRelayService', 'Received motor control message. Redirected to flight controller ...');
+                break;
             case IncomingGeoPositionMessage::class:
                 /** @var IncomingGeoPositionMessage $message */
                 $this->writeDebugLine('MessageRelayService', 'Received geo position message. Saving to repository ...');

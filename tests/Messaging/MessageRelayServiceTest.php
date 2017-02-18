@@ -9,11 +9,14 @@ use Volante\SkyBukkit\Common\Src\General\GeoPosition\GeoPosition;
 use Volante\SkyBukkit\Common\Src\General\GeoPosition\IncomingGeoPositionMessage;
 use Volante\SkyBukkit\Common\Src\General\GyroStatus\GyroStatus;
 use Volante\SkyBukkit\Common\Src\General\GyroStatus\IncomingGyroStatusMessage;
+use Volante\SkyBukkit\Common\Src\General\Motor\IncomingMotorControlMessage;
 use Volante\SkyBukkit\Common\Src\General\Motor\IncomingMotorStatusMessage;
 use Volante\SkyBukkit\Common\Src\General\Motor\Motor;
+use Volante\SkyBukkit\Common\Src\General\Motor\MotorControlMessage;
 use Volante\SkyBukkit\Common\Src\General\Motor\MotorStatus;
 use Volante\SkyBukkit\Common\Src\General\Role\ClientRole;
 use Volante\SkyBukkit\Common\Src\Server\Messaging\MessageServerService;
+use Volante\SkyBukkit\Common\Src\Server\Messaging\MessageService;
 use Volante\SkyBukkit\Common\Tests\Server\Messaging\MessageServerServiceTest;
 use Volante\SkyBukkit\RelayServer\Src\FlightController\PidFrequencyStatusRepository;
 use Volante\SkyBukkit\RelayServer\Src\GeoPosition\GeoPositionRepository;
@@ -81,9 +84,45 @@ class MessageRelayServiceTest extends MessageServerServiceTest
         return new MessageRelayService($this->dummyOutput, $this->messageService, $this->clientFactory, $this->geoPositionRepository, $this->gyroStatusRepository, $this->motorStatusRepository, $this->pidFrequencyStatusRepository, $this->topicStatusMessageFactory);
     }
 
+    public function test_handleMessage_motorControlMessage()
+    {
+        /** @var ConnectionInterface|\PHPUnit_Framework_MockObject_MockObject $fcConnection */
+        $fcConnection = $this->getMockBuilder(ConnectionInterface::class)->getMock();
+        /** @var ConnectionInterface|\PHPUnit_Framework_MockObject_MockObject $otherConnection */
+        $otherConnection = $this->getMockBuilder(ConnectionInterface::class)->getMock();
+
+        $operatorClient = new Client(1, $otherConnection, ClientRole::OPERATOR);
+        $operatorClient->setAuthenticated();
+        $this->clientFactory->expects(self::at(0))->method('get')->willReturn($operatorClient);
+
+        $statusBroker = new Client(2, $otherConnection, ClientRole::STATUS_BROKER);
+        $statusBroker->setAuthenticated();
+        $this->clientFactory->expects(self::at(1))->method('get')->willReturn($statusBroker);
+
+        $flightController = new Client(3, $fcConnection, ClientRole::FLIGHT_CONTROLLER);
+        $flightController->setAuthenticated();
+        $this->clientFactory->expects(self::at(2))->method('get')->willReturn($flightController);
+
+        $this->messageService->expects(self::once())
+            ->method('handle')
+            ->with($operatorClient, 'correct')
+            ->willReturn(new IncomingMotorControlMessage($operatorClient, new MotorControlMessage(new GyroStatus(1, 2, 3), 0.3, 0.5)));
+
+        $otherConnection->expects(self::never())->method('send');
+        $fcConnection->expects(self::once())
+            ->method('send')
+            ->with(self::equalTo('{"type":"motorControl","title":"Motor control","data":{"desiredPosition":{"yaw":1,"pitch":3,"roll":2},"horizontalThrottle":0.3,"verticalThrottle":0.5}}'));
+
+        $this->messageServerService->newClient($otherConnection);
+        $this->messageServerService->newClient($otherConnection);
+        $this->messageServerService->newClient($fcConnection);
+
+        $this->messageServerService->newMessage($otherConnection, 'correct');
+    }
+
     public function test_handleMessage_geoPositionMessage()
     {
-        $client = new Client(ClientRole::STATUS_BROKER, $this->connection, -1);
+        $client = new Client(0, $this->connection, -1);
         $client->setAuthenticated();
         $this->clientFactory->method('get')->willReturn($client);
 
@@ -101,7 +140,7 @@ class MessageRelayServiceTest extends MessageServerServiceTest
 
     public function test_handleMessage_gyroStatusMessage()
     {
-        $client = new Client(ClientRole::STATUS_BROKER, $this->connection, -1);
+        $client = new Client(0, $this->connection, -1);
         $client->setAuthenticated();
         $this->clientFactory->method('get')->willReturn($client);
 
@@ -119,7 +158,7 @@ class MessageRelayServiceTest extends MessageServerServiceTest
 
     public function test_handleMessage_motorStatusMessage()
     {
-        $client = new Client(ClientRole::FLIGHT_CONTROLLER, $this->connection, -1);
+        $client = new Client(0, $this->connection, -1);
         $client->setAuthenticated();
         $this->clientFactory->method('get')->willReturn($client);
 
@@ -137,7 +176,7 @@ class MessageRelayServiceTest extends MessageServerServiceTest
 
     public function test_handleMessage_pidFrequencyStatusMessage()
     {
-        $client = new Client(ClientRole::FLIGHT_CONTROLLER, $this->connection, -1);
+        $client = new Client(0, $this->connection, -1);
         $client->setAuthenticated();
         $this->clientFactory->method('get')->willReturn($client);
 
@@ -161,7 +200,7 @@ class MessageRelayServiceTest extends MessageServerServiceTest
             ->method('send')
             ->with('{"type":"topicStatus","title":"Topic status","data":{"status":[{"name":"dummyTopic","revision":4}]}}');
 
-        $client = new Client(ClientRole::OPERATOR, $connection, -1);
+        $client = new Client(0, $connection, -1);
         $client->setAuthenticated();
         $this->clientFactory->method('get')->willReturn($client);
 
@@ -179,7 +218,7 @@ class MessageRelayServiceTest extends MessageServerServiceTest
 
     public function test_handleMessage_subscriptionStatusHandledCorrect()
     {
-        $client = new Client(ClientRole::OPERATOR, $this->connection, -1);
+        $client = new Client(0, $this->connection, -1);
         $client->setAuthenticated();
         $this->clientFactory->method('get')->willReturn($client);
 
@@ -207,7 +246,7 @@ class MessageRelayServiceTest extends MessageServerServiceTest
             ->method('send')
             ->with('{"type":"topicContainer","title":"Topic container","data":{"topic":{"name":"geoPosition","revision":11},"receivedAt":"' . $topicContainer->getReceivedAt()->format(TopicContainer::DATE_FORMAT) . '","payload":{"latitude":1,"longitude":2,"altitude":3}}}');
 
-        $client = new Client(ClientRole::OPERATOR, $connection, -1);
+        $client = new Client(0, $connection, -1);
         $client->setSubscriptions([new TopicStatus(GeoPositionRepository::TOPIC, 9)]);
         $client->setAuthenticated();
 
@@ -236,7 +275,7 @@ class MessageRelayServiceTest extends MessageServerServiceTest
             ->method('send')
             ->with('{"type":"topicContainer","title":"Topic container","data":{"topic":{"name":"gyroStatus","revision":11},"receivedAt":"' . $topicContainer->getReceivedAt()->format(TopicContainer::DATE_FORMAT) . '","payload":{"yaw":1,"pitch":3,"roll":2}}}');
 
-        $client = new Client(ClientRole::OPERATOR, $connection, -1);
+        $client = new Client(0, $connection, -1);
         $client->setSubscriptions([new TopicStatus(GyroStatusRepository::TOPIC, 9)]);
         $client->setAuthenticated();
 
@@ -265,7 +304,7 @@ class MessageRelayServiceTest extends MessageServerServiceTest
             ->method('send')
             ->with(self::equalTo('{"type":"topicContainer","title":"Topic container","data":{"topic":{"name":"motorStatus","revision":11},"receivedAt":"' . $topicContainer->getReceivedAt()->format(TopicContainer::DATE_FORMAT) . '","payload":{"motors":[{"id":1,"pin":22,"power":1000}]}}}'));
 
-        $client = new Client(ClientRole::OPERATOR, $connection, -1);
+        $client = new Client(0, $connection, -1);
         $client->setSubscriptions([new TopicStatus(MotorStatusRepository::TOPIC, 9)]);
         $client->setAuthenticated();
 
@@ -294,7 +333,7 @@ class MessageRelayServiceTest extends MessageServerServiceTest
             ->method('send')
             ->with(self::equalTo('{"type":"topicContainer","title":"Topic container","data":{"topic":{"name":"' . PidFrequencyStatusRepository::TOPIC . '","revision":11},"receivedAt":"' . $topicContainer->getReceivedAt()->format(TopicContainer::DATE_FORMAT) . '","payload":{"desired":1000,"current":950}}}'));
 
-        $client = new Client(ClientRole::OPERATOR, $connection, -1);
+        $client = new Client(0, $connection, -1);
         $client->setSubscriptions([new TopicStatus(PidFrequencyStatusRepository::TOPIC, 9)]);
         $client->setAuthenticated();
 
@@ -323,7 +362,7 @@ class MessageRelayServiceTest extends MessageServerServiceTest
             ->method('send')
             ->with('{"type":"topicContainer","title":"Topic container","data":{"topic":{"name":"geoPosition","revision":11},"receivedAt":"' . $topicContainer->getReceivedAt()->format(TopicContainer::DATE_FORMAT) . '","payload":{"latitude":1,"longitude":2,"altitude":3}}}');
 
-        $client = new Client(ClientRole::OPERATOR, $connection, -1);
+        $client = new Client(0, $connection, -1);
         $client->setSubscriptions([new TopicStatus(GeoPositionRepository::TOPIC, 9)]);
         $client->setAuthenticated();
 
