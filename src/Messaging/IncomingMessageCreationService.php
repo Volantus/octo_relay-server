@@ -4,6 +4,7 @@ namespace Volante\SkyBukkit\RelayServer\Src\Messaging;
 use Volante\SkyBukkit\Common\Src\General\FlightController\PIDFrequencyStatusMessageFactory;
 use Volante\SkyBukkit\Common\Src\General\GeoPosition\GeoPositionMessageFactory;
 use Volante\SkyBukkit\Common\Src\General\GyroStatus\GyroStatusMessageFactory;
+use Volante\SkyBukkit\Common\Src\General\Motor\MotorControlMessageFactory;
 use Volante\SkyBukkit\Common\Src\General\Motor\MotorStatusMessageFactory;
 use Volante\SkyBukkit\Common\Src\Server\Authentication\AuthenticationMessageFactory;
 use Volante\SkyBukkit\Common\Src\Server\Messaging\MessageService;
@@ -29,6 +30,7 @@ class IncomingMessageCreationService extends MessageService
      * @param GyroStatusMessageFactory          $gyroStatusMessageFactory
      * @param MotorStatusMessageFactory         $motorStatusMessageFactory
      * @param PIDFrequencyStatusMessageFactory  $PIDFrequencyStatusMessageFactory
+     * @param MotorControlMessageFactory        $motorControlMessageFactory
      * @param RequestTopicStatusMessageFactory  $requestTopicStatusMessageFactory
      * @param SubscriptionStatusMessageFactory  $subscriptionStatusMessageFactory
      */
@@ -39,10 +41,11 @@ class IncomingMessageCreationService extends MessageService
         GyroStatusMessageFactory $gyroStatusMessageFactory = null,
         MotorStatusMessageFactory $motorStatusMessageFactory = null,
         PIDFrequencyStatusMessageFactory $PIDFrequencyStatusMessageFactory = null,
+        MotorControlMessageFactory $motorControlMessageFactory = null,
         RequestTopicStatusMessageFactory $requestTopicStatusMessageFactory = null,
         SubscriptionStatusMessageFactory $subscriptionStatusMessageFactory = null
     ) {
-        parent::__construct($rawMessageFactory, $introductionMessageFactory, $authenticationMessageFactory, $geoPositionMessageFactory, $gyroStatusMessageFactory, $motorStatusMessageFactory, $PIDFrequencyStatusMessageFactory);
+        parent::__construct($rawMessageFactory, $introductionMessageFactory, $authenticationMessageFactory, $geoPositionMessageFactory, $gyroStatusMessageFactory, $motorStatusMessageFactory, $PIDFrequencyStatusMessageFactory, $motorControlMessageFactory);
 
         $this->registerFactory($requestTopicStatusMessageFactory ?: new RequestTopicStatusMessageFactory());
         $this->registerFactory($subscriptionStatusMessageFactory ?: new SubscriptionStatusMessageFactory());
