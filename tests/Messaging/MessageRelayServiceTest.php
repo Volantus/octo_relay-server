@@ -106,12 +106,12 @@ class MessageRelayServiceTest extends MessageServerServiceTest
         $this->messageService->expects(self::once())
             ->method('handle')
             ->with($operatorClient, 'correct')
-            ->willReturn(new IncomingMotorControlMessage($operatorClient, new MotorControlMessage(new GyroStatus(1, 2, 3), 0.3, 0.5)));
+            ->willReturn(new IncomingMotorControlMessage($operatorClient, new MotorControlMessage(new GyroStatus(1, 2, 3), 0.3, 0.5, true)));
 
         $otherConnection->expects(self::never())->method('send');
         $fcConnection->expects(self::once())
             ->method('send')
-            ->with(self::equalTo('{"type":"motorControl","title":"Motor control","data":{"desiredPosition":{"yaw":1,"pitch":3,"roll":2},"horizontalThrottle":0.3,"verticalThrottle":0.5}}'));
+            ->with(self::equalTo('{"type":"motorControl","title":"Motor control","data":{"desiredPosition":{"yaw":1,"pitch":3,"roll":2},"horizontalThrottle":0.3,"verticalThrottle":0.5,"motorsStarted":true}}'));
 
         $this->messageServerService->newClient($otherConnection);
         $this->messageServerService->newClient($otherConnection);
