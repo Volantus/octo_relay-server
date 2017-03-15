@@ -44,7 +44,7 @@ class IncomingMessageCreationServiceTest extends MessageServiceTest
      */
     protected function createService() : MessageService
     {
-        return new IncomingMessageCreationService($this->rawMessageFactory, $this->introductionMessageFactory, $this->authenticationMessageFactory, $this->geoPositionMessageFactory, $this->gyroStatusMessageFactory, $this->motorStatusMessageFactory, $this->PIDFrequencyStatusMessageFactory, $this->motorControlMessageFactory, $this->requestTopicStatusMessageFactory, $this->subscriptionStatusMessageFactory);
+        return new IncomingMessageCreationService($this->rawMessageFactory, $this->introductionMessageFactory, $this->authenticationMessageFactory, $this->geoPositionMessageFactory, $this->gyroStatusMessageFactory, $this->motorStatusMessageFactory, $this->PIDFrequencyStatusMessageFactory, $this->motorControlMessageFactory, $this->pidTuningStatusMessageFactory, $this->requestTopicStatusMessageFactory, $this->subscriptionStatusMessageFactory);
     }
 
     public function test_handle_RequestTopicStatusMessageHandledCorrectly()

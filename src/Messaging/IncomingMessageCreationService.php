@@ -2,6 +2,7 @@
 namespace Volante\SkyBukkit\RelayServer\Src\Messaging;
 
 use Volante\SkyBukkit\Common\Src\General\FlightController\PIDFrequencyStatusMessageFactory;
+use Volante\SkyBukkit\Common\Src\General\FlightController\PIDTuningStatusMessageFactory;
 use Volante\SkyBukkit\Common\Src\General\GeoPosition\GeoPositionMessageFactory;
 use Volante\SkyBukkit\Common\Src\General\GyroStatus\GyroStatusMessageFactory;
 use Volante\SkyBukkit\Common\Src\General\Motor\MotorControlMessageFactory;
@@ -23,16 +24,17 @@ class IncomingMessageCreationService extends MessageService
     /**
      * IncomingMessageCreationService constructor.
      *
-     * @param RawMessageFactory|null            $rawMessageFactory
-     * @param IntroductionMessageFactory|null   $introductionMessageFactory
-     * @param AuthenticationMessageFactory|null $authenticationMessageFactory
-     * @param GeoPositionMessageFactory|null    $geoPositionMessageFactory
-     * @param GyroStatusMessageFactory          $gyroStatusMessageFactory
-     * @param MotorStatusMessageFactory         $motorStatusMessageFactory
-     * @param PIDFrequencyStatusMessageFactory  $PIDFrequencyStatusMessageFactory
-     * @param MotorControlMessageFactory        $motorControlMessageFactory
-     * @param RequestTopicStatusMessageFactory  $requestTopicStatusMessageFactory
-     * @param SubscriptionStatusMessageFactory  $subscriptionStatusMessageFactory
+     * @param RawMessageFactory|null             $rawMessageFactory
+     * @param IntroductionMessageFactory|null    $introductionMessageFactory
+     * @param AuthenticationMessageFactory|null  $authenticationMessageFactory
+     * @param GeoPositionMessageFactory|null     $geoPositionMessageFactory
+     * @param GyroStatusMessageFactory           $gyroStatusMessageFactory
+     * @param MotorStatusMessageFactory          $motorStatusMessageFactory
+     * @param PIDFrequencyStatusMessageFactory   $PIDFrequencyStatusMessageFactory
+     * @param MotorControlMessageFactory         $motorControlMessageFactory
+     * @param PIDTuningStatusMessageFactory|null $PIDTuningStatusMessageFactory
+     * @param RequestTopicStatusMessageFactory   $requestTopicStatusMessageFactory
+     * @param SubscriptionStatusMessageFactory   $subscriptionStatusMessageFactory
      */
     public function __construct(RawMessageFactory $rawMessageFactory = null,
         IntroductionMessageFactory $introductionMessageFactory = null,
@@ -42,10 +44,11 @@ class IncomingMessageCreationService extends MessageService
         MotorStatusMessageFactory $motorStatusMessageFactory = null,
         PIDFrequencyStatusMessageFactory $PIDFrequencyStatusMessageFactory = null,
         MotorControlMessageFactory $motorControlMessageFactory = null,
+        PIDTuningStatusMessageFactory $PIDTuningStatusMessageFactory = null,
         RequestTopicStatusMessageFactory $requestTopicStatusMessageFactory = null,
         SubscriptionStatusMessageFactory $subscriptionStatusMessageFactory = null
     ) {
-        parent::__construct($rawMessageFactory, $introductionMessageFactory, $authenticationMessageFactory, $geoPositionMessageFactory, $gyroStatusMessageFactory, $motorStatusMessageFactory, $PIDFrequencyStatusMessageFactory, $motorControlMessageFactory);
+        parent::__construct($rawMessageFactory, $introductionMessageFactory, $authenticationMessageFactory, $geoPositionMessageFactory, $gyroStatusMessageFactory, $motorStatusMessageFactory, $PIDFrequencyStatusMessageFactory, $motorControlMessageFactory, $PIDTuningStatusMessageFactory);
 
         $this->registerFactory($requestTopicStatusMessageFactory ?: new RequestTopicStatusMessageFactory());
         $this->registerFactory($subscriptionStatusMessageFactory ?: new SubscriptionStatusMessageFactory());
