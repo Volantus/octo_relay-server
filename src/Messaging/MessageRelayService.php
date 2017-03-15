@@ -3,6 +3,7 @@ namespace Volante\SkyBukkit\RelayServer\Src\Messaging;
 
 use Symfony\Component\Console\Output\OutputInterface;
 use Volante\SkyBukkit\Common\Src\General\FlightController\IncomingPIDFrequencyStatus;
+use Volante\SkyBukkit\Common\Src\General\FlightController\IncomingPIDTuningStatusMessage;
 use Volante\SkyBukkit\Common\Src\General\GeoPosition\IncomingGeoPositionMessage;
 use Volante\SkyBukkit\Common\Src\General\GyroStatus\IncomingGyroStatusMessage;
 use Volante\SkyBukkit\Common\Src\General\Motor\IncomingMotorControlMessage;
@@ -11,6 +12,7 @@ use Volante\SkyBukkit\Common\Src\General\Role\ClientRole;
 use Volante\SkyBukkit\Common\Src\Server\Messaging\IncomingMessage;
 use Volante\SkyBukkit\Common\Src\Server\Messaging\MessageServerService;
 use Volante\SkyBukkit\RelayServer\Src\FlightController\PidFrequencyStatusRepository;
+use Volante\SkyBukkit\RelayServer\Src\FlightController\PidTuningStatusRepository;
 use Volante\SkyBukkit\RelayServer\Src\GeoPosition\GeoPositionRepository;
 use Volante\SkyBukkit\RelayServer\Src\GyroStatus\GyroStatusRepository;
 use Volante\SkyBukkit\RelayServer\Src\Motor\MotorStatusRepository;
@@ -49,6 +51,11 @@ class MessageRelayService extends MessageServerService
     private $pidFrequencyStatusRepository;
 
     /**
+     * @var PidTuningStatusRepository
+     */
+    private $pidTuningStatusRepository;
+
+    /**
      * @var TopicStatusMessageFactory
      */
     private $topicStatusMessageFactory;
@@ -73,22 +80,25 @@ class MessageRelayService extends MessageServerService
      * @param GyroStatusRepository                $gyroStatusRepository
      * @param MotorStatusRepository               $motorStatusRepository
      * @param PidFrequencyStatusRepository        $pidFrequencyStatusRepository
+     * @param PidTuningStatusRepository|null      $pidTuningStatusRepository
      * @param TopicStatusMessageFactory           $topicStatusMessageFactory
      */
-    public function __construct(OutputInterface $output, IncomingMessageCreationService $messageService = null, ClientFactory $clientFactory = null, GeoPositionRepository $geoPositionRepository = null, GyroStatusRepository $gyroStatusRepository = null, MotorStatusRepository $motorStatusRepository = null, PidFrequencyStatusRepository $pidFrequencyStatusRepository = null, TopicStatusMessageFactory $topicStatusMessageFactory = null)
+    public function __construct(OutputInterface $output, IncomingMessageCreationService $messageService = null, ClientFactory $clientFactory = null, GeoPositionRepository $geoPositionRepository = null, GyroStatusRepository $gyroStatusRepository = null, MotorStatusRepository $motorStatusRepository = null, PidFrequencyStatusRepository $pidFrequencyStatusRepository = null, PidTuningStatusRepository $pidTuningStatusRepository = null, TopicStatusMessageFactory $topicStatusMessageFactory = null)
     {
         parent::__construct($output, $messageService ?: new IncomingMessageCreationService(), $clientFactory ?: new ClientFactory());
         $this->geoPositionRepository = $geoPositionRepository ?: new GeoPositionRepository();
         $this->gyroStatusRepository = $gyroStatusRepository ?: new GyroStatusRepository();
         $this->motorStatusRepository = $motorStatusRepository ?: new MotorStatusRepository();
         $this->pidFrequencyStatusRepository = $pidFrequencyStatusRepository ?: new PidFrequencyStatusRepository();
+        $this->pidTuningStatusRepository = $pidTuningStatusRepository ?: new PidTuningStatusRepository();
 
         $this->repositories[GeoPositionRepository::TOPIC] = $this->geoPositionRepository;
         $this->repositories[GyroStatusRepository::TOPIC] = $this->gyroStatusRepository;
         $this->repositories[MotorStatusRepository::TOPIC] = $this->motorStatusRepository;
         $this->repositories[PidFrequencyStatusRepository::TOPIC] = $this->pidFrequencyStatusRepository;
+        $this->repositories[PidTuningStatusRepository::TOPIC] = $this->pidTuningStatusRepository;
 
-        $this->topicStatusMessageFactory = $topicStatusMessageFactory ?: new TopicStatusMessageFactory($this->geoPositionRepository, $this->gyroStatusRepository, $this->motorStatusRepository, $this->pidFrequencyStatusRepository);
+        $this->topicStatusMessageFactory = $topicStatusMessageFactory ?: new TopicStatusMessageFactory($this->geoPositionRepository, $this->gyroStatusRepository, $this->motorStatusRepository, $this->pidFrequencyStatusRepository, $this->pidTuningStatusRepository);
     }
 
     /**
@@ -131,6 +141,12 @@ class MessageRelayService extends MessageServerService
                 /** @var IncomingPIDFrequencyStatus $message */
                 $this->writeDebugLine('MessageRelayService', 'Received PID frequency status message. Saving to repository ...');
                 $this->pidFrequencyStatusRepository->add($message->getFrequencyStatus());
+                $this->fullFillSubscriptions();
+                break;
+            case IncomingPIDTuningStatusMessage::class:
+                /** @var IncomingPIDTuningStatusMessage $message */
+                $this->writeDebugLine('MessageRelayService', 'Received PID tuning status message. Saving to repository ...');
+                $this->pidTuningStatusRepository->add($message->getStatus());
                 $this->fullFillSubscriptions();
                 break;
             case RequestTopicStatusMessage::class:
