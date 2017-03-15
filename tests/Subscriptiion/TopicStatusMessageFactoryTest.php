@@ -2,6 +2,7 @@
 namespace Volante\SkyBukkit\RelayServer\Tests\Subscription;
 
 use Volante\SkyBukkit\RelayServer\Src\FlightController\PidFrequencyStatusRepository;
+use Volante\SkyBukkit\RelayServer\Src\FlightController\PidTuningStatusRepository;
 use Volante\SkyBukkit\RelayServer\Src\GeoPosition\GeoPositionRepository;
 use Volante\SkyBukkit\RelayServer\Src\GyroStatus\GyroStatusRepository;
 use Volante\SkyBukkit\RelayServer\Src\Motor\MotorStatusRepository;
@@ -41,13 +42,19 @@ class TopicStatusMessageFactoryTest extends \PHPUnit_Framework_TestCase
      */
     private $frequencyRepository;
 
+    /**
+     * @var PidTuningStatusRepository|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private $tuningStatusRepository;
+
     protected function setUp()
     {
         $this->geoRepository = $this->getMockBuilder(GeoPositionRepository::class)->disableOriginalConstructor()->getMock();
         $this->gyroRepository = $this->getMockBuilder(GyroStatusRepository::class)->disableOriginalConstructor()->getMock();
         $this->motorRepository = $this->getMockBuilder(MotorStatusRepository::class)->disableOriginalConstructor()->getMock();
         $this->frequencyRepository = $this->getMockBuilder(PidFrequencyStatusRepository::class)->disableOriginalConstructor()->getMock();
-        $this->factory = new TopicStatusMessageFactory($this->geoRepository, $this->gyroRepository, $this->motorRepository, $this->frequencyRepository);
+        $this->tuningStatusRepository = $this->getMockBuilder(PidTuningStatusRepository::class)->disableOriginalConstructor()->getMock();
+        $this->factory = new TopicStatusMessageFactory($this->geoRepository, $this->gyroRepository, $this->motorRepository, $this->frequencyRepository, $this->tuningStatusRepository);
     }
 
     public function test_getMessage_repositoryCalled()
@@ -72,8 +79,13 @@ class TopicStatusMessageFactoryTest extends \PHPUnit_Framework_TestCase
             ->method('getTopicStatus')
             ->willReturn($frequencyTopicStatus);
 
+        $pidTuningStatus = new TopicStatus(PidTuningStatusRepository::TOPIC, 10);
+        $this->tuningStatusRepository->expects(self::once())
+            ->method('getTopicStatus')
+            ->willReturn($pidTuningStatus);
+
         $result = $this->factory->getMessage();
         self::assertInstanceOf(TopicStatusMessage::class, $result);
-        self::assertEquals([$geoTopicStatus, $gyroTopicStatus, $motorTopicStatus, $frequencyTopicStatus], $result->getStatus());
+        self::assertEquals([$geoTopicStatus, $gyroTopicStatus, $motorTopicStatus, $frequencyTopicStatus, $pidTuningStatus], $result->getStatus());
     }
 }
