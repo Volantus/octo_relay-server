@@ -4,6 +4,7 @@ namespace Volante\SkyBukkit\RelayServer\Src\Messaging;
 use Symfony\Component\Console\Output\OutputInterface;
 use Volante\SkyBukkit\Common\Src\General\FlightController\IncomingPIDFrequencyStatus;
 use Volante\SkyBukkit\Common\Src\General\FlightController\IncomingPIDTuningStatusMessage;
+use Volante\SkyBukkit\Common\Src\General\FlightController\IncomingPIDTuningUpdateMessage;
 use Volante\SkyBukkit\Common\Src\General\GeoPosition\IncomingGeoPositionMessage;
 use Volante\SkyBukkit\Common\Src\General\GyroStatus\IncomingGyroStatusMessage;
 use Volante\SkyBukkit\Common\Src\General\Motor\IncomingMotorControlMessage;
@@ -117,41 +118,41 @@ class MessageRelayService extends MessageServerService
                         break;
                     }
                 }
-                $this->writeDebugLine('MessageRelayService', 'Received motor control message. Redirected to flight controller ...');
+                $this->writeDebugLine('MessageRelayService', 'Received motor control message. Redirected to flight controller...');
                 break;
             case IncomingGeoPositionMessage::class:
                 /** @var IncomingGeoPositionMessage $message */
-                $this->writeDebugLine('MessageRelayService', 'Received geo position message. Saving to repository ...');
+                $this->writeDebugLine('MessageRelayService', 'Received geo position message. Saving to repository...');
                 $this->geoPositionRepository->add($message->getGeoPosition());
                 $this->fullFillSubscriptions();
                 break;
             case IncomingGyroStatusMessage::class:
                 /** @var IncomingGyroStatusMessage $message */
-                $this->writeDebugLine('MessageRelayService', 'Received gyro status message. Saving to repository ...');
+                $this->writeDebugLine('MessageRelayService', 'Received gyro status message. Saving to repository...');
                 $this->gyroStatusRepository->add($message->getGyroStatus());
                 $this->fullFillSubscriptions();
                 break;
             case IncomingMotorStatusMessage::class:
                 /** @var IncomingMotorStatusMessage $message */
-                $this->writeDebugLine('MessageRelayService', 'Received motor status message. Saving to repository ...');
+                $this->writeDebugLine('MessageRelayService', 'Received motor status message. Saving to repository...');
                 $this->motorStatusRepository->add($message->getMotorStatus());
                 $this->fullFillSubscriptions();
                 break;
             case IncomingPIDFrequencyStatus::class:
                 /** @var IncomingPIDFrequencyStatus $message */
-                $this->writeDebugLine('MessageRelayService', 'Received PID frequency status message. Saving to repository ...');
+                $this->writeDebugLine('MessageRelayService', 'Received PID frequency status message. Saving to repository...');
                 $this->pidFrequencyStatusRepository->add($message->getFrequencyStatus());
                 $this->fullFillSubscriptions();
                 break;
             case IncomingPIDTuningStatusMessage::class:
                 /** @var IncomingPIDTuningStatusMessage $message */
-                $this->writeDebugLine('MessageRelayService', 'Received PID tuning status message. Saving to repository ...');
+                $this->writeDebugLine('MessageRelayService', 'Received PID tuning status message. Saving to repository...');
                 $this->pidTuningStatusRepository->add($message->getStatus());
                 $this->fullFillSubscriptions();
                 break;
             case RequestTopicStatusMessage::class:
                 /** @var RequestTopicStatusMessage $message */
-                $this->writeInfoLine('MessageRelayService', 'Client ' . $message->getSender()->getId() . ' requested topic status, sending status ...');
+                $this->writeInfoLine('MessageRelayService', 'Client ' . $message->getSender()->getId() . ' requested topic status, sending status...');
                 $message->getSender()->send(json_encode($this->topicStatusMessageFactory->getMessage()->toRawMessage()));
                 break;
             case SubscriptionStatusMessage::class:
@@ -161,6 +162,16 @@ class MessageRelayService extends MessageServerService
                 $sender = $message->getSender();
                 $sender->setSubscriptions($message->getStatus());
                 $this->fullFillSubscriptions();
+                break;
+            case IncomingPIDTuningUpdateMessage::class:
+                /** @var IncomingPIDTuningUpdateMessage $message */
+                foreach ($this->clients as $client) {
+                    if ($client->getRole() == ClientRole::FLIGHT_CONTROLLER) {
+                        $client->send(json_encode($message->getStatus()->toRawMessage()));
+                        break;
+                    }
+                }
+                $this->writeDebugLine('MessageRelayService', 'Received PID tuning update message. Redirected to flight controller...');
                 break;
         }
     }

@@ -4,9 +4,11 @@ namespace Volante\SkyBukkit\RelayServer\Tests\Messaging;
 use Ratchet\ConnectionInterface;
 use Volante\SkyBukkit\Common\Src\General\FlightController\IncomingPIDFrequencyStatus;
 use Volante\SkyBukkit\Common\Src\General\FlightController\IncomingPIDTuningStatusMessage;
+use Volante\SkyBukkit\Common\Src\General\FlightController\IncomingPIDTuningUpdateMessage;
 use Volante\SkyBukkit\Common\Src\General\FlightController\PIDFrequencyStatus;
 use Volante\SkyBukkit\Common\Src\General\FlightController\PIDTuningStatus;
 use Volante\SkyBukkit\Common\Src\General\FlightController\PIDTuningStatusCollection;
+use Volante\SkyBukkit\Common\Src\General\FlightController\PIDTuningUpdateCollection;
 use Volante\SkyBukkit\Common\Src\General\GeoPosition\GeoPosition;
 use Volante\SkyBukkit\Common\Src\General\GeoPosition\IncomingGeoPositionMessage;
 use Volante\SkyBukkit\Common\Src\General\GyroStatus\GyroStatus;
@@ -120,6 +122,42 @@ class MessageRelayServiceTest extends MessageServerServiceTest
         $fcConnection->expects(self::once())
             ->method('send')
             ->with(self::equalTo('{"type":"motorControl","title":"Motor control","data":{"desiredPosition":{"yaw":1,"pitch":3,"roll":2},"horizontalThrottle":0.3,"verticalThrottle":0.5,"motorsStarted":true}}'));
+
+        $this->messageServerService->newClient($otherConnection);
+        $this->messageServerService->newClient($otherConnection);
+        $this->messageServerService->newClient($fcConnection);
+
+        $this->messageServerService->newMessage($otherConnection, 'correct');
+    }
+
+    public function test_handleMessage_pidTuningUpdateMessage()
+    {
+        /** @var ConnectionInterface|\PHPUnit_Framework_MockObject_MockObject $fcConnection */
+        $fcConnection = $this->getMockBuilder(ConnectionInterface::class)->getMock();
+        /** @var ConnectionInterface|\PHPUnit_Framework_MockObject_MockObject $otherConnection */
+        $otherConnection = $this->getMockBuilder(ConnectionInterface::class)->getMock();
+
+        $operatorClient = new Client(1, $otherConnection, ClientRole::OPERATOR);
+        $operatorClient->setAuthenticated();
+        $this->clientFactory->expects(self::at(0))->method('get')->willReturn($operatorClient);
+
+        $statusBroker = new Client(2, $otherConnection, ClientRole::STATUS_BROKER);
+        $statusBroker->setAuthenticated();
+        $this->clientFactory->expects(self::at(1))->method('get')->willReturn($statusBroker);
+
+        $flightController = new Client(3, $fcConnection, ClientRole::FLIGHT_CONTROLLER);
+        $flightController->setAuthenticated();
+        $this->clientFactory->expects(self::at(2))->method('get')->willReturn($flightController);
+
+        $this->messageService->expects(self::once())
+            ->method('handle')
+            ->with($operatorClient, 'correct')
+            ->willReturn(new IncomingPIDTuningUpdateMessage($operatorClient, new PIDTuningUpdateCollection(new PIDTuningStatus(1, 2, 3), new PIDTuningStatus(4, 5, 6), new PIDTuningStatus(7, 8, 9))));
+
+        $otherConnection->expects(self::never())->method('send');
+        $fcConnection->expects(self::once())
+            ->method('send')
+            ->with(self::equalTo('{"type":"pidTuningUpdate","title":"PID tuning update","data":{"yaw":{"Kp":1,"Ki":2,"Kd":3},"roll":{"Kp":4,"Ki":5,"Kd":6},"pitch":{"Kp":7,"Ki":8,"Kd":9}}}'));
 
         $this->messageServerService->newClient($otherConnection);
         $this->messageServerService->newClient($otherConnection);
