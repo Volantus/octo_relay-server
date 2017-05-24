@@ -1,16 +1,16 @@
 <?php
-namespace Volante\SkyBukkit\RleayServer\Tests\GeoPosition;
+namespace Volantus\RleayServer\Tests\GeoPosition;
 
-use Volante\SkyBukkit\Common\Src\Client\OutgoingMessage;
-use Volante\SkyBukkit\Common\Src\General\GeoPosition\GeoPosition;
-use Volante\SkyBukkit\RelayServer\Src\GeoPosition\GeoPositionRepository;
-use Volante\SkyBukkit\RelayServer\Src\Subscription\TopicRepository;
-use Volante\SkyBukkit\RelayServer\Tests\Topic\TopicRepositoryTestCase;
+use Volantus\FlightBase\Src\Client\OutgoingMessage;
+use Volantus\FlightBase\Src\General\GeoPosition\GeoPosition;
+use Volantus\RelayServer\Src\GeoPosition\GeoPositionRepository;
+use Volantus\RelayServer\Src\Subscription\TopicRepository;
+use Volantus\RelayServer\Tests\Topic\TopicRepositoryTestCase;
 
 
 /**
  * Class GeoPositionRepositoryTest
- * @package Volante\SkyBukkit\RleayServer\Tests\GeoPosition
+ * @package Volantus\RleayServer\Tests\GeoPosition
  */
 class GeoPositionRepositoryTest extends TopicRepositoryTestCase
 {

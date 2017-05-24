@@ -1,11 +1,11 @@
 <?php
-namespace Volante\SkyBukkit\RelayServer\Src\Subscription;
+namespace Volantus\RelayServer\Src\Subscription;
 
-use Volante\SkyBukkit\Common\Src\Client\OutgoingMessage;
+use Volantus\FlightBase\Src\Client\OutgoingMessage;
 
 /**
  * Class TopicStatusMessage
- * @package Volante\SkyBukkit\RelayServer\Src\Subscription
+ * @package Volantus\RelayServer\Src\Subscription
  */
 class TopicStatusMessage extends OutgoingMessage
 {

@@ -1,5 +1,5 @@
 <?php
-namespace Volante\SkyBukkit\RelayServer\Src\CLI;
+namespace Volantus\RelayServer\Src\CLI;
 
 use Ratchet\Http\HttpServer;
 use Ratchet\Server\IoServer;
@@ -8,12 +8,12 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Volante\SkyBukkit\RelayServer\Src\Controller;
-use Volante\SkyBukkit\RelayServer\Src\Messaging\MessageRelayService;
+use Volantus\RelayServer\Src\Controller;
+use Volantus\RelayServer\Src\Messaging\MessageRelayService;
 
 /**
  * Class ServerCommand
- * @package Volante\SkyBukkit\RelayServer\Src\CLI
+ * @package Volantus\RelayServer\Src\CLI
  */
 class ServerCommand extends Command
 {

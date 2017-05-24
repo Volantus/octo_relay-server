@@ -1,13 +1,13 @@
 <?php
-namespace Volante\SkyBukkit\RelayServer\Src\Network;
+namespace Volantus\RelayServer\Src\Network;
 
-use Volante\SkyBukkit\RelayServer\Src\Subscription\TopicStatus;
+use Volantus\RelayServer\Src\Subscription\TopicStatus;
 
 /**
  * Class Connection
- * @package Volante\SkyBukkit\Monitor\Src\FlightStatus\Network
+ * @package Volantus\Monitor\Src\FlightStatus\Network
  */
-class Client extends \Volante\SkyBukkit\Common\Src\Server\Network\Client
+class Client extends \Volantus\FlightBase\Src\Server\Network\Client
 {
     /**
      * @var TopicStatus[]

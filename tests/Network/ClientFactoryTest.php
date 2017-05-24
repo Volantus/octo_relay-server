@@ -1,11 +1,11 @@
 <?php
-namespace Volante\SkyBukkit\RleayServer\Tests\Message;
-use Volante\SkyBukkit\Common\Tests\Server\General\DummyConnection;
-use Volante\SkyBukkit\RelayServer\Src\Network\ClientFactory;
+namespace Volantus\RleayServer\Tests\Message;
+use Volantus\FlightBase\Tests\Server\General\DummyConnection;
+use Volantus\RelayServer\Src\Network\ClientFactory;
 
 /**
  * Class ClientFactoryTest
- * @package Volante\SkyBukkit\RleayServer\Tests\Message
+ * @package Volantus\RleayServer\Tests\Message
  */
 class ClientFactoryTest extends \PHPUnit_Framework_TestCase
 {

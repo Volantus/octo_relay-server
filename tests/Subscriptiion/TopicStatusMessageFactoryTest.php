@@ -1,19 +1,19 @@
 <?php
-namespace Volante\SkyBukkit\RelayServer\Tests\Subscription;
+namespace Volantus\RelayServer\Tests\Subscription;
 
-use Volante\SkyBukkit\RelayServer\Src\FlightController\PidFrequencyStatusRepository;
-use Volante\SkyBukkit\RelayServer\Src\FlightController\PidTuningStatusRepository;
-use Volante\SkyBukkit\RelayServer\Src\GeoPosition\GeoPositionRepository;
-use Volante\SkyBukkit\RelayServer\Src\GyroStatus\GyroStatusRepository;
-use Volante\SkyBukkit\RelayServer\Src\Motor\MotorStatusRepository;
-use Volante\SkyBukkit\RelayServer\Src\Subscription\TopicStatus;
-use Volante\SkyBukkit\RelayServer\Src\Subscription\TopicStatusMessage;
-use Volante\SkyBukkit\RelayServer\Src\Subscription\TopicStatusMessageFactory;
+use Volantus\RelayServer\Src\FlightController\PidFrequencyStatusRepository;
+use Volantus\RelayServer\Src\FlightController\PidTuningStatusRepository;
+use Volantus\RelayServer\Src\GeoPosition\GeoPositionRepository;
+use Volantus\RelayServer\Src\GyroStatus\GyroStatusRepository;
+use Volantus\RelayServer\Src\Motor\MotorStatusRepository;
+use Volantus\RelayServer\Src\Subscription\TopicStatus;
+use Volantus\RelayServer\Src\Subscription\TopicStatusMessage;
+use Volantus\RelayServer\Src\Subscription\TopicStatusMessageFactory;
 
 /**
  * Class TopicStatusMessageFactoryTest
  *
- * @package Volante\SkyBukkit\RelayServer\Tests\Subscription
+ * @package Volantus\RelayServer\Tests\Subscription
  */
 class TopicStatusMessageFactoryTest extends \PHPUnit_Framework_TestCase
 {

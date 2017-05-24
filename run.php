@@ -1,7 +1,7 @@
 <?php
 use Dotenv\Dotenv;
 use Symfony\Component\Console\Application;
-use Volante\SkyBukkit\RelayServer\Src\CLI\ServerCommand;
+use Volantus\RelayServer\Src\CLI\ServerCommand;
 
 require __DIR__.'/vendor/autoload.php';
 

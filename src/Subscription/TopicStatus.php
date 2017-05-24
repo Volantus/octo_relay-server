@@ -1,9 +1,9 @@
 <?php
-namespace Volante\SkyBukkit\RelayServer\Src\Subscription;
+namespace Volantus\RelayServer\Src\Subscription;
 
 /**
  * Class Subscription
- * @package Volante\SkyBukkit\Monitor\Src\Subscription
+ * @package Volantus\Monitor\Src\Subscription
  */
 class TopicStatus implements \JsonSerializable
 {

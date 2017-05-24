@@ -1,11 +1,11 @@
 <?php
-namespace Volante\SkyBukkit\RelayServer\Src\GyroStatus;
+namespace Volantus\RelayServer\Src\GyroStatus;
 
-use Volante\SkyBukkit\RelayServer\Src\Subscription\TopicRepository;
+use Volantus\RelayServer\Src\Subscription\TopicRepository;
 
 /**
  * Class GyroStatusRepository
- * @package Volante\SkyBukkit\RelayServer\Src\GyroStatus
+ * @package Volantus\RelayServer\Src\GyroStatus
  */
 class GyroStatusRepository extends TopicRepository
 {

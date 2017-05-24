@@ -1,11 +1,11 @@
 <?php
-namespace Volante\SkyBukkit\RelayServer\Tests\Subscription;
-use Volante\SkyBukkit\RelayServer\Src\Subscription\TopicStatus;
-use Volante\SkyBukkit\RelayServer\Src\Subscription\TopicStatusMessage;
+namespace Volantus\RelayServer\Tests\Subscription;
+use Volantus\RelayServer\Src\Subscription\TopicStatus;
+use Volantus\RelayServer\Src\Subscription\TopicStatusMessage;
 
 /**
  * Class TopicStatusMessageTest
- * @package Volante\SkyBukkit\RelayServer\Tests\Subscription
+ * @package Volantus\RelayServer\Tests\Subscription
  */
 class TopicStatusMessageTest extends \PHPUnit_Framework_TestCase
 {

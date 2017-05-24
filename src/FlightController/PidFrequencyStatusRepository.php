@@ -1,12 +1,12 @@
 <?php
-namespace Volante\SkyBukkit\RelayServer\Src\FlightController;
+namespace Volantus\RelayServer\Src\FlightController;
 
-use Volante\SkyBukkit\RelayServer\Src\Subscription\TopicRepository;
+use Volantus\RelayServer\Src\Subscription\TopicRepository;
 
 /**
  * Class PidFrequencyStatusRepository
  *
- * @package Volante\SkyBukkit\RelayServer\Src\FlightController
+ * @package Volantus\RelayServer\Src\FlightController
  */
 class PidFrequencyStatusRepository extends TopicRepository
 {

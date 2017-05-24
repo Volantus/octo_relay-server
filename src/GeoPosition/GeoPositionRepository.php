@@ -1,11 +1,11 @@
 <?php
-namespace Volante\SkyBukkit\RelayServer\Src\GeoPosition;
+namespace Volantus\RelayServer\Src\GeoPosition;
 
-use Volante\SkyBukkit\RelayServer\Src\Subscription\TopicRepository;
+use Volantus\RelayServer\Src\Subscription\TopicRepository;
 
 /**
  * Class GeoPositionRepository
- * @package Volante\SkyBukkit\RelayServer\Src\GeoPosition
+ * @package Volantus\RelayServer\Src\GeoPosition
  */
 class GeoPositionRepository extends TopicRepository
 {

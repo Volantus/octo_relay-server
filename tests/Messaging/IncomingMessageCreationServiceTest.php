@@ -1,19 +1,19 @@
 <?php
-namespace Volante\SkyBukkit\RelayServer\Tests\Messaging;
+namespace Volantus\RelayServer\Tests\Messaging;
 
-use Volante\SkyBukkit\Common\Src\Server\Messaging\MessageService;
-use Volante\SkyBukkit\Common\Src\Server\Network\NetworkRawMessage;
-use Volante\SkyBukkit\Common\Tests\Server\Messaging\MessageServiceTest;
-use Volante\SkyBukkit\RelayServer\Src\Messaging\IncomingMessageCreationService;
-use Volante\SkyBukkit\RelayServer\Src\Subscription\RequestTopicStatusMessage;
-use Volante\SkyBukkit\RelayServer\Src\Subscription\RequestTopicStatusMessageFactory;
-use Volante\SkyBukkit\RelayServer\Src\Subscription\SubscriptionStatusMessage;
-use Volante\SkyBukkit\RelayServer\Src\Subscription\SubscriptionStatusMessageFactory;
+use Volantus\FlightBase\Src\Server\Messaging\MessageService;
+use Volantus\FlightBase\Src\Server\Network\NetworkRawMessage;
+use Volantus\FlightBase\Tests\Server\Messaging\MessageServiceTest;
+use Volantus\RelayServer\Src\Messaging\IncomingMessageCreationService;
+use Volantus\RelayServer\Src\Subscription\RequestTopicStatusMessage;
+use Volantus\RelayServer\Src\Subscription\RequestTopicStatusMessageFactory;
+use Volantus\RelayServer\Src\Subscription\SubscriptionStatusMessage;
+use Volantus\RelayServer\Src\Subscription\SubscriptionStatusMessageFactory;
 
 /**
  * Class IncomingMessageCreationServiceTest
  *
- * @package Volante\SkyBukkit\RelayServer\Tests\Messaging
+ * @package Volantus\RelayServer\Tests\Messaging
  */
 class IncomingMessageCreationServiceTest extends MessageServiceTest
 {

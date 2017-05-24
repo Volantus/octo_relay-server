@@ -1,15 +1,15 @@
 <?php
-namespace Volante\SkyBukkit\RelayServer\Src\Subscription;
+namespace Volantus\RelayServer\Src\Subscription;
 
-use Volante\SkyBukkit\RelayServer\Src\FlightController\PidFrequencyStatusRepository;
-use Volante\SkyBukkit\RelayServer\Src\FlightController\PidTuningStatusRepository;
-use Volante\SkyBukkit\RelayServer\Src\GeoPosition\GeoPositionRepository;
-use Volante\SkyBukkit\RelayServer\Src\GyroStatus\GyroStatusRepository;
-use Volante\SkyBukkit\RelayServer\Src\Motor\MotorStatusRepository;
+use Volantus\RelayServer\Src\FlightController\PidFrequencyStatusRepository;
+use Volantus\RelayServer\Src\FlightController\PidTuningStatusRepository;
+use Volantus\RelayServer\Src\GeoPosition\GeoPositionRepository;
+use Volantus\RelayServer\Src\GyroStatus\GyroStatusRepository;
+use Volantus\RelayServer\Src\Motor\MotorStatusRepository;
 
 /**
  * Class TopicStatusMessageFactory
- * @package Volante\SkyBukkit\RelayServer\Src\Subscription
+ * @package Volantus\RelayServer\Src\Subscription
  */
 class TopicStatusMessageFactory
 {

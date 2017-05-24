@@ -1,12 +1,12 @@
 <?php
-namespace Volante\SkyBukkit\RelayServer\Src\Motor;
+namespace Volantus\RelayServer\Src\Motor;
 
-use Volante\SkyBukkit\RelayServer\Src\Subscription\TopicRepository;
+use Volantus\RelayServer\Src\Subscription\TopicRepository;
 
 /**
  * Class MotorStatusRepository
  *
- * @package Volante\SkyBukkit\RelayServer\Src
+ * @package Volantus\RelayServer\Src
  */
 class MotorStatusRepository extends TopicRepository
 {

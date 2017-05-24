@@ -1,17 +1,17 @@
 <?php
-namespace Volante\SkyBukkit\RelayServer\Tests\Motor;
+namespace Volantus\RelayServer\Tests\Motor;
 
-use Volante\SkyBukkit\Common\Src\Client\OutgoingMessage;
-use Volante\SkyBukkit\Common\Src\General\Motor\Motor;
-use Volante\SkyBukkit\Common\Src\General\Motor\MotorStatus;
-use Volante\SkyBukkit\RelayServer\Src\Motor\MotorStatusRepository;
-use Volante\SkyBukkit\RelayServer\Src\Subscription\TopicRepository;
-use Volante\SkyBukkit\RelayServer\Tests\Topic\TopicRepositoryTestCase;
+use Volantus\FlightBase\Src\Client\OutgoingMessage;
+use Volantus\FlightBase\Src\General\Motor\Motor;
+use Volantus\FlightBase\Src\General\Motor\MotorStatus;
+use Volantus\RelayServer\Src\Motor\MotorStatusRepository;
+use Volantus\RelayServer\Src\Subscription\TopicRepository;
+use Volantus\RelayServer\Tests\Topic\TopicRepositoryTestCase;
 
 /**
  * Class MotorStatusRepositoryTest
  *
- * @package Volante\SkyBukkit\RelayServer\Tests\Motor
+ * @package Volantus\RelayServer\Tests\Motor
  */
 class MotorStatusRepositoryTest extends TopicRepositoryTestCase
 {

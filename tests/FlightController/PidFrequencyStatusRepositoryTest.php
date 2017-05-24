@@ -1,16 +1,16 @@
 <?php
-namespace Volante\SkyBukkit\RelayServer\Tests\FlightController;
+namespace Volantus\RelayServer\Tests\FlightController;
 
-use Volante\SkyBukkit\Common\Src\Client\OutgoingMessage;
-use Volante\SkyBukkit\Common\Src\General\FlightController\PIDFrequencyStatus;
-use Volante\SkyBukkit\RelayServer\Src\FlightController\PidFrequencyStatusRepository;
-use Volante\SkyBukkit\RelayServer\Src\Subscription\TopicRepository;
-use Volante\SkyBukkit\RelayServer\Tests\Topic\TopicRepositoryTestCase;
+use Volantus\FlightBase\Src\Client\OutgoingMessage;
+use Volantus\FlightBase\Src\General\FlightController\PIDFrequencyStatus;
+use Volantus\RelayServer\Src\FlightController\PidFrequencyStatusRepository;
+use Volantus\RelayServer\Src\Subscription\TopicRepository;
+use Volantus\RelayServer\Tests\Topic\TopicRepositoryTestCase;
 
 /**
  * Class PidFrequencyStatusRepositoryTest
  *
- * @package Volante\SkyBukkit\RelayServer\Tests\FlightController
+ * @package Volantus\RelayServer\Tests\FlightController
  */
 class PidFrequencyStatusRepositoryTest extends TopicRepositoryTestCase
 {

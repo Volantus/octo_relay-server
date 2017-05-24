@@ -1,17 +1,17 @@
 <?php
-namespace Volante\SkyBukkit\RelayServer\Tests\Subscription;
+namespace Volantus\RelayServer\Tests\Subscription;
 
-use Volante\SkyBukkit\Common\Src\Server\Messaging\IncomingMessage;
-use Volante\SkyBukkit\Common\Src\Server\Network\NetworkRawMessage;
-use Volante\SkyBukkit\Common\Tests\Server\General\MessageFactoryTestCase;
-use Volante\SkyBukkit\RelayServer\Src\Subscription\SubscriptionStatusMessage;
-use Volante\SkyBukkit\RelayServer\Src\Subscription\SubscriptionStatusMessageFactory;
-use Volante\SkyBukkit\RelayServer\Src\Subscription\TopicStatus;
+use Volantus\FlightBase\Src\Server\Messaging\IncomingMessage;
+use Volantus\FlightBase\Src\Server\Network\NetworkRawMessage;
+use Volantus\FlightBase\Tests\Server\General\MessageFactoryTestCase;
+use Volantus\RelayServer\Src\Subscription\SubscriptionStatusMessage;
+use Volantus\RelayServer\Src\Subscription\SubscriptionStatusMessageFactory;
+use Volantus\RelayServer\Src\Subscription\TopicStatus;
 
 /**
  * Class SubscriptionStatusMessageFactoryTest
  *
- * @package Volante\SkyBukkit\RelayServer\Tests\Subscription
+ * @package Volantus\RelayServer\Tests\Subscription
  */
 class SubscriptionStatusMessageFactoryTest extends MessageFactoryTestCase
 {

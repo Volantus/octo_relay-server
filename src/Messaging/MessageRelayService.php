@@ -1,33 +1,33 @@
 <?php
-namespace Volante\SkyBukkit\RelayServer\Src\Messaging;
+namespace Volantus\RelayServer\Src\Messaging;
 
 use Symfony\Component\Console\Output\OutputInterface;
-use Volante\SkyBukkit\Common\Src\General\FlightController\IncomingPIDFrequencyStatus;
-use Volante\SkyBukkit\Common\Src\General\FlightController\IncomingPIDTuningStatusMessage;
-use Volante\SkyBukkit\Common\Src\General\FlightController\IncomingPIDTuningUpdateMessage;
-use Volante\SkyBukkit\Common\Src\General\GeoPosition\IncomingGeoPositionMessage;
-use Volante\SkyBukkit\Common\Src\General\GyroStatus\IncomingGyroStatusMessage;
-use Volante\SkyBukkit\Common\Src\General\Motor\IncomingMotorControlMessage;
-use Volante\SkyBukkit\Common\Src\General\Motor\IncomingMotorStatusMessage;
-use Volante\SkyBukkit\Common\Src\General\Role\ClientRole;
-use Volante\SkyBukkit\Common\Src\Server\Messaging\IncomingMessage;
-use Volante\SkyBukkit\Common\Src\Server\Messaging\MessageServerService;
-use Volante\SkyBukkit\RelayServer\Src\FlightController\PidFrequencyStatusRepository;
-use Volante\SkyBukkit\RelayServer\Src\FlightController\PidTuningStatusRepository;
-use Volante\SkyBukkit\RelayServer\Src\GeoPosition\GeoPositionRepository;
-use Volante\SkyBukkit\RelayServer\Src\GyroStatus\GyroStatusRepository;
-use Volante\SkyBukkit\RelayServer\Src\Motor\MotorStatusRepository;
-use Volante\SkyBukkit\RelayServer\Src\Network\Client;
-use Volante\SkyBukkit\RelayServer\Src\Network\ClientFactory;
-use Volante\SkyBukkit\RelayServer\Src\Subscription\RequestTopicStatusMessage;
-use Volante\SkyBukkit\RelayServer\Src\Subscription\SubscriptionStatusMessage;
-use Volante\SkyBukkit\RelayServer\Src\Subscription\TopicRepository;
-use Volante\SkyBukkit\RelayServer\Src\Subscription\TopicStatus;
-use Volante\SkyBukkit\RelayServer\Src\Subscription\TopicStatusMessageFactory;
+use Volantus\FlightBase\Src\General\FlightController\IncomingPIDFrequencyStatus;
+use Volantus\FlightBase\Src\General\FlightController\IncomingPIDTuningStatusMessage;
+use Volantus\FlightBase\Src\General\FlightController\IncomingPIDTuningUpdateMessage;
+use Volantus\FlightBase\Src\General\GeoPosition\IncomingGeoPositionMessage;
+use Volantus\FlightBase\Src\General\GyroStatus\IncomingGyroStatusMessage;
+use Volantus\FlightBase\Src\General\Motor\IncomingMotorControlMessage;
+use Volantus\FlightBase\Src\General\Motor\IncomingMotorStatusMessage;
+use Volantus\FlightBase\Src\General\Role\ClientRole;
+use Volantus\FlightBase\Src\Server\Messaging\IncomingMessage;
+use Volantus\FlightBase\Src\Server\Messaging\MessageServerService;
+use Volantus\RelayServer\Src\FlightController\PidFrequencyStatusRepository;
+use Volantus\RelayServer\Src\FlightController\PidTuningStatusRepository;
+use Volantus\RelayServer\Src\GeoPosition\GeoPositionRepository;
+use Volantus\RelayServer\Src\GyroStatus\GyroStatusRepository;
+use Volantus\RelayServer\Src\Motor\MotorStatusRepository;
+use Volantus\RelayServer\Src\Network\Client;
+use Volantus\RelayServer\Src\Network\ClientFactory;
+use Volantus\RelayServer\Src\Subscription\RequestTopicStatusMessage;
+use Volantus\RelayServer\Src\Subscription\SubscriptionStatusMessage;
+use Volantus\RelayServer\Src\Subscription\TopicRepository;
+use Volantus\RelayServer\Src\Subscription\TopicStatus;
+use Volantus\RelayServer\Src\Subscription\TopicStatusMessageFactory;
 
 /**
  * Class MessageRelayService
- * @package Volante\SkyBukkit\RelayServer\Src\Messaging
+ * @package Volantus\RelayServer\Src\Messaging
  */
 class MessageRelayService extends MessageServerService
 {

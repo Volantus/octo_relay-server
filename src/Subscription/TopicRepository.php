@@ -1,10 +1,10 @@
 <?php
-namespace Volante\SkyBukkit\RelayServer\Src\Subscription;
-use Volante\SkyBukkit\Common\Src\Client\OutgoingMessage;
+namespace Volantus\RelayServer\Src\Subscription;
+use Volantus\FlightBase\Src\Client\OutgoingMessage;
 
 /**
  * Class TopicRepository
- * @package Volante\SkyBukkit\RelayServer\Src\Subscription
+ * @package Volantus\RelayServer\Src\Subscription
  */
 abstract class TopicRepository
 {

@@ -1,14 +1,14 @@
 <?php
-namespace Volante\SkyBukkit\RelayServer\Src;
+namespace Volantus\RelayServer\Src;
 
 use Symfony\Component\Console\Output\OutputInterface;
-use Volante\SkyBukkit\RelayServer\Src\Messaging\MessageRelayService;
+use Volantus\RelayServer\Src\Messaging\MessageRelayService;
 
 /**
  * Class OperatorServer
- * @package Volante\SkyBukkit\Monitor\App
+ * @package Volantus\Monitor\App
  */
-class Controller extends \Volante\SkyBukkit\Common\Src\Server\Controller
+class Controller extends \Volantus\FlightBase\Src\Server\Controller
 {
     /**
      * Controller constructor.

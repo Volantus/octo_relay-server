@@ -1,24 +1,24 @@
 <?php
-namespace Volante\SkyBukkit\RelayServer\Src\Messaging;
+namespace Volantus\RelayServer\Src\Messaging;
 
-use Volante\SkyBukkit\Common\Src\General\FlightController\PIDFrequencyStatusMessageFactory;
-use Volante\SkyBukkit\Common\Src\General\FlightController\PIDTuningStatusMessageFactory;
-use Volante\SkyBukkit\Common\Src\General\FlightController\PIDTuningUpdateMessageFactory;
-use Volante\SkyBukkit\Common\Src\General\GeoPosition\GeoPositionMessageFactory;
-use Volante\SkyBukkit\Common\Src\General\GyroStatus\GyroStatusMessageFactory;
-use Volante\SkyBukkit\Common\Src\General\Motor\MotorControlMessageFactory;
-use Volante\SkyBukkit\Common\Src\General\Motor\MotorStatusMessageFactory;
-use Volante\SkyBukkit\Common\Src\Server\Authentication\AuthenticationMessageFactory;
-use Volante\SkyBukkit\Common\Src\Server\Messaging\MessageService;
-use Volante\SkyBukkit\Common\Src\Server\Network\RawMessageFactory;
-use Volante\SkyBukkit\Common\Src\Server\Role\IntroductionMessageFactory;
-use Volante\SkyBukkit\RelayServer\Src\Subscription\RequestTopicStatusMessageFactory;
-use Volante\SkyBukkit\RelayServer\Src\Subscription\SubscriptionStatusMessageFactory;
+use Volantus\FlightBase\Src\General\FlightController\PIDFrequencyStatusMessageFactory;
+use Volantus\FlightBase\Src\General\FlightController\PIDTuningStatusMessageFactory;
+use Volantus\FlightBase\Src\General\FlightController\PIDTuningUpdateMessageFactory;
+use Volantus\FlightBase\Src\General\GeoPosition\GeoPositionMessageFactory;
+use Volantus\FlightBase\Src\General\GyroStatus\GyroStatusMessageFactory;
+use Volantus\FlightBase\Src\General\Motor\MotorControlMessageFactory;
+use Volantus\FlightBase\Src\General\Motor\MotorStatusMessageFactory;
+use Volantus\FlightBase\Src\Server\Authentication\AuthenticationMessageFactory;
+use Volantus\FlightBase\Src\Server\Messaging\MessageService;
+use Volantus\FlightBase\Src\Server\Network\RawMessageFactory;
+use Volantus\FlightBase\Src\Server\Role\IntroductionMessageFactory;
+use Volantus\RelayServer\Src\Subscription\RequestTopicStatusMessageFactory;
+use Volantus\RelayServer\Src\Subscription\SubscriptionStatusMessageFactory;
 
 /**
  * Class IncomingMessageCreationService
  *
- * @package Volante\SkyBukkit\RelayServer\Src\Messaging
+ * @package Volantus\RelayServer\Src\Messaging
  */
 class IncomingMessageCreationService extends MessageService
 {

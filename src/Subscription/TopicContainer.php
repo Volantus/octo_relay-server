@@ -1,12 +1,12 @@
 <?php
-namespace Volante\SkyBukkit\RelayServer\Src\Subscription;
+namespace Volantus\RelayServer\Src\Subscription;
 
 use Carbon\Carbon;
-use Volante\SkyBukkit\Common\Src\Client\OutgoingMessage;
+use Volantus\FlightBase\Src\Client\OutgoingMessage;
 
 /**
  * Class TopicMessage
- * @package Volante\SkyBukkit\RelayServer\Src\Subscription
+ * @package Volantus\RelayServer\Src\Subscription
  */
 class TopicContainer extends OutgoingMessage
 {

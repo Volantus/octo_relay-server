@@ -1,15 +1,15 @@
 <?php
-namespace Volante\SkyBukkit\RelayServer\Tests\Subscription;
+namespace Volantus\RelayServer\Tests\Subscription;
 
-use Volante\SkyBukkit\Common\Src\Client\OutgoingMessage;
-use Volante\SkyBukkit\Common\Src\General\Network\BaseRawMessage;
-use Volante\SkyBukkit\RelayServer\Src\Subscription\TopicContainer;
-use Volante\SkyBukkit\RelayServer\Src\Subscription\TopicStatus;
+use Volantus\FlightBase\Src\Client\OutgoingMessage;
+use Volantus\FlightBase\Src\General\Network\BaseRawMessage;
+use Volantus\RelayServer\Src\Subscription\TopicContainer;
+use Volantus\RelayServer\Src\Subscription\TopicStatus;
 
 /**
  * Class TopicContainerTest
  *
- * @package Volante\SkyBukkit\RelayServer\Tests\Subscription
+ * @package Volantus\RelayServer\Tests\Subscription
  */
 class TopicContainerTest extends \PHPUnit_Framework_TestCase
 {
