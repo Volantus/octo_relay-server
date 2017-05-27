@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "318784da41b2cc04b991322aacdd72e4",
+    "hash": "ff620cdf6666d778aa654869e9189a7e",
     "content-hash": "cea305d35a83cbc845091bb5ea86289c",
     "packages": [
         {
@@ -2698,16 +2698,16 @@
         },
         {
             "name": "volantus/flight-base",
-            "version": "1.0.0",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Volantus/flight-base.git",
-                "reference": "390903ebcb3100e29a190c240cc607f468d4bd1c"
+                "reference": "8f8ec67ddf171ebf28f986554b8bcbb881261c1f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Volantus/flight-base/zipball/390903ebcb3100e29a190c240cc607f468d4bd1c",
-                "reference": "390903ebcb3100e29a190c240cc607f468d4bd1c",
+                "url": "https://api.github.com/repos/Volantus/flight-base/zipball/8f8ec67ddf171ebf28f986554b8bcbb881261c1f",
+                "reference": "8f8ec67ddf171ebf28f986554b8bcbb881261c1f",
                 "shasum": ""
             },
             "require": {
@@ -2735,7 +2735,7 @@
                 }
             ],
             "description": "Base library for all Volantus flight stack modules",
-            "time": "2017-05-24 18:16:57"
+            "time": "2017-05-27 14:17:28"
         },
         {
             "name": "webmozart/assert",

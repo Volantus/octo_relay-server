@@ -4,6 +4,7 @@ namespace Volantus\RelayServer\Src\Messaging;
 use Volantus\FlightBase\Src\General\FlightController\PIDFrequencyStatusMessageFactory;
 use Volantus\FlightBase\Src\General\FlightController\PIDTuningStatusMessageFactory;
 use Volantus\FlightBase\Src\General\FlightController\PIDTuningUpdateMessageFactory;
+use Volantus\FlightBase\Src\General\Generic\GenericInternalMessageFactory;
 use Volantus\FlightBase\Src\General\GeoPosition\GeoPositionMessageFactory;
 use Volantus\FlightBase\Src\General\GyroStatus\GyroStatusMessageFactory;
 use Volantus\FlightBase\Src\General\Motor\MotorControlMessageFactory;
@@ -35,6 +36,7 @@ class IncomingMessageCreationService extends MessageService
      * @param MotorControlMessageFactory         $motorControlMessageFactory
      * @param PIDTuningStatusMessageFactory|null $PIDTuningStatusMessageFactory
      * @param PIDTuningUpdateMessageFactory|null $PIDTuningUpdateMessageFactory
+     * @param GenericInternalMessageFactory|null $genericInternalMessageFactory
      * @param RequestTopicStatusMessageFactory   $requestTopicStatusMessageFactory
      * @param SubscriptionStatusMessageFactory   $subscriptionStatusMessageFactory
      */
@@ -48,10 +50,11 @@ class IncomingMessageCreationService extends MessageService
         MotorControlMessageFactory $motorControlMessageFactory = null,
         PIDTuningStatusMessageFactory $PIDTuningStatusMessageFactory = null,
         PIDTuningUpdateMessageFactory $PIDTuningUpdateMessageFactory = null,
+        GenericInternalMessageFactory $genericInternalMessageFactory = null,
         RequestTopicStatusMessageFactory $requestTopicStatusMessageFactory = null,
         SubscriptionStatusMessageFactory $subscriptionStatusMessageFactory = null
     ) {
-        parent::__construct($rawMessageFactory, $introductionMessageFactory, $authenticationMessageFactory, $geoPositionMessageFactory, $gyroStatusMessageFactory, $motorStatusMessageFactory, $PIDFrequencyStatusMessageFactory, $motorControlMessageFactory, $PIDTuningStatusMessageFactory, $PIDTuningUpdateMessageFactory);
+        parent::__construct($rawMessageFactory, $introductionMessageFactory, $authenticationMessageFactory, $geoPositionMessageFactory, $gyroStatusMessageFactory, $motorStatusMessageFactory, $PIDFrequencyStatusMessageFactory, $motorControlMessageFactory, $PIDTuningStatusMessageFactory, $PIDTuningUpdateMessageFactory, $genericInternalMessageFactory);
 
         $this->registerFactory($requestTopicStatusMessageFactory ?: new RequestTopicStatusMessageFactory());
         $this->registerFactory($subscriptionStatusMessageFactory ?: new SubscriptionStatusMessageFactory());
