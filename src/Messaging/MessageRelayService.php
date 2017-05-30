@@ -113,7 +113,7 @@ class MessageRelayService extends MessageServerService
             case IncomingMotorControlMessage::class:
                 /** @var IncomingMotorControlMessage $message */
                 foreach ($this->clients as $client) {
-                    if ($client->getRole() == ClientRole::FLIGHT_CONTROLLER) {
+                    if ($client->getRole() == ClientRole::MANUAL_CONTROL_SERVICE) {
                         $client->send(json_encode($message->getMotorControl()->toRawMessage()));
                         break;
                     }
@@ -166,7 +166,7 @@ class MessageRelayService extends MessageServerService
             case IncomingPIDTuningUpdateMessage::class:
                 /** @var IncomingPIDTuningUpdateMessage $message */
                 foreach ($this->clients as $client) {
-                    if ($client->getRole() == ClientRole::FLIGHT_CONTROLLER) {
+                    if ($client->getRole() == ClientRole::MANUAL_CONTROL_SERVICE) {
                         $client->send(json_encode($message->getStatus()->toRawMessage()));
                         break;
                     }

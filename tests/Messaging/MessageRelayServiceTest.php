@@ -105,11 +105,11 @@ class MessageRelayServiceTest extends MessageServerServiceTest
         $operatorClient->setAuthenticated();
         $this->clientFactory->expects(self::at(0))->method('get')->willReturn($operatorClient);
 
-        $statusBroker = new Client(2, $otherConnection, ClientRole::STATUS_BROKER);
+        $statusBroker = new Client(2, $otherConnection, 99);
         $statusBroker->setAuthenticated();
         $this->clientFactory->expects(self::at(1))->method('get')->willReturn($statusBroker);
 
-        $flightController = new Client(3, $fcConnection, ClientRole::FLIGHT_CONTROLLER);
+        $flightController = new Client(3, $fcConnection, ClientRole::MANUAL_CONTROL_SERVICE);
         $flightController->setAuthenticated();
         $this->clientFactory->expects(self::at(2))->method('get')->willReturn($flightController);
 
@@ -141,11 +141,11 @@ class MessageRelayServiceTest extends MessageServerServiceTest
         $operatorClient->setAuthenticated();
         $this->clientFactory->expects(self::at(0))->method('get')->willReturn($operatorClient);
 
-        $statusBroker = new Client(2, $otherConnection, ClientRole::STATUS_BROKER);
+        $statusBroker = new Client(2, $otherConnection, 99);
         $statusBroker->setAuthenticated();
         $this->clientFactory->expects(self::at(1))->method('get')->willReturn($statusBroker);
 
-        $flightController = new Client(3, $fcConnection, ClientRole::FLIGHT_CONTROLLER);
+        $flightController = new Client(3, $fcConnection, ClientRole::MANUAL_CONTROL_SERVICE);
         $flightController->setAuthenticated();
         $this->clientFactory->expects(self::at(2))->method('get')->willReturn($flightController);
 
