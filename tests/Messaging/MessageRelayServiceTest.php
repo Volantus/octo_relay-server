@@ -368,7 +368,7 @@ class MessageRelayServiceTest extends MessageServerServiceTest
         $connection = $this->getMockBuilder(ConnectionInterface::class)->getMock();
         $connection->expects(self::once())
             ->method('send')
-            ->with(self::equalTo('{"type":"topicContainer","title":"Topic container","data":{"topic":{"name":"motorStatus","revision":11},"receivedAt":"' . $topicContainer->getReceivedAt()->format(TopicContainer::DATE_FORMAT) . '","payload":{"motors":[{"id":1,"pin":22,"power":1000}]}}}'));
+            ->with(self::equalTo('{"type":"topicContainer","title":"Topic container","data":{"topic":{"name":"motorStatus","revision":11},"receivedAt":"' . $topicContainer->getReceivedAt()->format(TopicContainer::DATE_FORMAT) . '","payload":{"motors":[{"id":1,"pin":22,"power":0}]}}}'));
 
         $client = new Client(0, $connection, -1);
         $client->setSubscriptions([new TopicStatus(MotorStatusRepository::TOPIC, 9)]);
