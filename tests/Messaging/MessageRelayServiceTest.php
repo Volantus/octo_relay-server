@@ -109,7 +109,7 @@ class MessageRelayServiceTest extends MessageServerServiceTest
         $statusBroker->setAuthenticated();
         $this->clientFactory->expects(self::at(1))->method('get')->willReturn($statusBroker);
 
-        $flightController = new Client(3, $fcConnection, ClientRole::MANUAL_CONTROL_SERVICE);
+        $flightController = new Client(3, $fcConnection, ClientRole::ORIENTATION_CONTROL_SERVICE);
         $flightController->setAuthenticated();
         $this->clientFactory->expects(self::at(2))->method('get')->willReturn($flightController);
 
